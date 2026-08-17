@@ -1,0 +1,351 @@
+/* Kelimelik — web + mobile visual hardening
+ * Loaded after style.css so legacy overrides cannot move the header,
+ * modal close control, history favorite action or live-match ordering again.
+ */
+
+
+/* Desktop history favorite hardening: ui-patches renders a placeholder first;
+   mobile-fixes.js replaces it with a real button on every viewport. */
+.history-item .history-favorite{
+  display:grid!important;
+  place-items:center!important;
+  flex:0 0 auto!important;
+  color:#e8c95d!important;
+  opacity:1!important;
+  visibility:visible!important
+}
+.history-item .history-favorite[aria-pressed="true"]{
+  color:#f0d66e!important
+}
+
+/* Desktop + mobile: modal X uses the runtime title-center alignment. */
+.modal{
+  --close-size:44px;
+  --close-top:24px;
+  --close-right:24px
+}
+.modal-close,
+.live-match-modal .modal-close{
+  position:absolute!important;
+  top:var(--modal-close-top,var(--close-top))!important;
+  right:var(--close-right)!important;
+  z-index:150!important;
+  width:var(--close-size)!important;
+  height:var(--close-size)!important;
+  margin:0!important;
+  padding:0!important;
+  display:grid!important;
+  place-items:center!important;
+  border:0!important;
+  border-radius:8px!important;
+  background:#0e0e0f!important;
+  color:#f1eeeb!important;
+  font:400 30px/1 Arial,Helvetica,sans-serif!important;
+  transform:none!important;
+  touch-action:manipulation!important
+}
+#modalBody>h2{
+  min-height:var(--close-size)!important;
+  margin:0 62px 18px 0!important;
+  display:flex!important;
+  align-items:center!important;
+  line-height:1.12!important
+}
+.live-match-modal{
+  --close-top:18px;
+  --close-right:18px
+}
+.live-match-head,.bot-normal-head{
+  min-height:44px!important;
+  padding-right:62px!important;
+  align-items:center!important
+}
+.live-match-head h2,.bot-normal-head h2{
+  margin:0!important;
+  line-height:1.12!important
+}
+.live-match-time{
+  margin-left:auto!important;
+  align-self:center!important
+}
+
+@media (max-width: 760px){
+  /* Main game header: one stable row on phones. */
+  .topbar{
+    width:min(100%,calc(100% - 12px))!important;
+    grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;
+    grid-template-areas:"brand mode actions"!important;
+    align-items:center!important;
+    min-height:58px!important;
+    margin-top:8px!important;
+    padding:7px 9px!important;
+    column-gap:6px!important;
+    row-gap:0!important;
+    overflow:visible!important
+  }
+  .brand{
+    grid-area:brand!important;
+    justify-self:start!important;
+    min-width:0!important;
+    gap:7px!important
+  }
+  /* Mobilde marka metni gizli; boşalan alan mod/süre ve aksiyonlara verilir. */
+  .brand-text{display:none!important}
+  .top-actions{
+    grid-area:actions!important;
+    justify-self:end!important;
+    gap:5px!important
+  }
+  .top-btn{
+    width:40px!important;
+    height:40px!important;
+    border-radius:10px!important
+  }
+  .top-icon{font-size:20px!important}
+  .how-top-btn .top-icon{font-size:18px!important}
+  .new-game-top-btn .top-icon{font-size:22px!important}
+
+  /* Keep mode + timer in the middle instead of floating over the board. */
+  .game-mode-strip{
+    grid-area:mode!important;
+    position:static!important;
+    left:auto!important;
+    top:auto!important;
+    transform:none!important;
+    justify-self:center!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:142px!important;
+    margin:0!important;
+    padding:4px 7px!important;
+    display:flex!important;
+    flex-direction:row!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:4px!important;
+    border-radius:999px!important;
+    white-space:nowrap!important;
+    pointer-events:none!important
+  }
+  .game-mode-strip span:first-child{
+    display:block!important;
+    min-width:0!important;
+    max-width:72px!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+    font-size:12px!important;
+    line-height:1.1!important;
+    text-align:center!important
+  }
+  .game-mode-strip span:last-child{
+    flex:0 0 auto!important;
+    padding:4px 6px!important;
+    font-size:12px!important;
+    line-height:1!important
+  }
+  .game-area{margin-top:10px!important}
+
+  /* Every modal uses the same close-button anchor and title baseline. */
+  .modal{
+    --close-size:44px;
+    --close-top:18px;
+    --close-right:16px;
+    width:min(100%,520px)!important;
+    max-height:calc(100dvh - max(20px,env(safe-area-inset-top)))!important;
+    padding-top:18px!important;
+    padding-right:16px!important;
+    padding-bottom:max(18px,env(safe-area-inset-bottom))!important;
+    padding-left:16px!important;
+    border-radius:16px!important;
+    overscroll-behavior:contain!important
+  }
+  .modal-close{
+    position:absolute!important;
+    top:var(--modal-close-top,18px)!important;
+    right:16px!important;
+    z-index:150!important;
+    width:44px!important;
+    height:44px!important;
+    margin:0!important;
+    padding:0!important;
+    display:grid!important;
+    place-items:center!important;
+    border-radius:8px!important;
+    font:400 30px/1 Arial,Helvetica,sans-serif!important;
+    transform:none!important;
+    touch-action:manipulation!important
+  }
+  #modalBody>h2{
+    min-height:44px!important;
+    margin:0 58px 18px 0!important;
+    display:flex!important;
+    align-items:center!important;
+    font-size:22px!important;
+    line-height:1.12!important
+  }
+
+  /* Live/bot modal header follows the same close baseline. */
+  .live-match-modal{
+    --close-top:14px;
+    --close-right:12px;
+    max-height:calc(100dvh - 10px)!important;
+    padding-top:14px!important;
+    padding-right:10px!important;
+    padding-bottom:max(12px,env(safe-area-inset-bottom))!important;
+    padding-left:10px!important;
+    overflow:hidden!important
+  }
+  /* Online/bot içeriği kendi içinde kayar; X modal kabuğunda sabit kalır. */
+  .live-match-modal #modalBody{
+    max-height:calc(100dvh - 38px - env(safe-area-inset-bottom))!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch
+  }
+  .live-match-modal .modal-close{
+    top:var(--modal-close-top,14px)!important;
+    right:12px!important
+  }
+  .live-match-head,.bot-normal-head{
+    min-height:44px!important;
+    padding:0 58px 0 0!important;
+    align-items:center!important;
+    gap:7px!important
+  }
+  .live-match-head h2,.bot-normal-head h2{
+    margin:0!important;
+    font-size:15px!important;
+    line-height:1.12!important
+  }
+  .live-match-time{
+    min-width:58px!important;
+    margin-left:auto!important;
+    padding:5px 7px!important;
+    align-self:center!important;
+    font-size:12px!important
+  }
+
+  /* Mobile order: opponent first, SELF immediately before the keyboard. */
+  .live-versus-grid,.bot-dual-grid{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:8px!important
+  }
+  .live-vs,.bot-dual-vs{display:none!important}
+  .opponent-side,.bot-opponent-side{order:1!important}
+  .self-side,.bot-self-side{order:2!important}
+
+  /* Opponent remains visible but is visually secondary on small screens. */
+  .opponent-side,.bot-opponent-side{
+    padding:6px!important;
+    gap:5px!important
+  }
+  .opponent-side .live-player-card,
+  .bot-opponent-side .live-player-card{
+    opacity:.88
+  }
+  .opponent-side .live-board-classic{--live-s:clamp(30px,8.6vw,36px)!important}
+  .opponent-side .live-board-kelimelik{--live-s:clamp(25px,7vw,31px)!important}
+  .bot-opponent-side .bot-game-board.classic-direct-board{--s:clamp(30px,8.6vw,36px)!important}
+  .bot-opponent-side .bot-game-board:not(.classic-direct-board){--s:clamp(25px,7vw,31px)!important}
+
+  /* Self board stays larger and closest to the keyboard. */
+  .self-side,.bot-self-side{
+    padding:7px!important;
+    gap:6px!important;
+    border-color:#4a6147!important
+  }
+  .self-side .live-board-classic{--live-s:clamp(35px,10vw,43px)!important}
+  .self-side .live-board-kelimelik{--live-s:clamp(28px,8vw,36px)!important}
+  .bot-self-side .bot-game-board.classic-direct-board{--s:clamp(35px,10vw,43px)!important}
+  .bot-self-side .bot-game-board:not(.classic-direct-board){--s:clamp(28px,8vw,36px)!important}
+
+  .live-keyboard,.bot-normal-keyboard{
+    margin-top:2px!important;
+    gap:4px!important
+  }
+  .live-key-row{gap:3px!important}
+  .live-key{height:34px!important;font-size:10px!important}
+  .live-key-action{flex:0 0 42px!important}
+  .live-submit-btn{min-height:36px!important;font-size:11px!important}
+
+  /* History: make the favorite action explicit and finger-sized. */
+  .history-item{
+    grid-template-columns:42px minmax(0,1fr) auto!important;
+    column-gap:8px!important;
+    padding:9px 8px!important
+  }
+  .history-item>div{min-width:0!important}
+  .history-item>div>b{
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important
+  }
+  .history-favorite{
+    width:36px!important;
+    height:36px!important;
+    min-width:36px!important;
+    margin:0!important;
+    padding:0!important;
+    display:grid!important;
+    place-items:center!important;
+    border:1px solid #4a473c!important;
+    border-radius:9px!important;
+    background:#24231f!important;
+    color:#e8c95d!important;
+    font:700 24px/1 Arial,Helvetica,sans-serif!important;
+    opacity:1!important;
+    cursor:pointer!important;
+    touch-action:manipulation!important
+  }
+  .history-favorite[aria-pressed="true"]{
+    background:#332f1f!important;
+    border-color:#75683c!important
+  }
+  .history-favorite-muted{
+    border-color:transparent!important;
+    background:transparent!important;
+    opacity:.25!important;
+    cursor:default!important
+  }
+}
+
+@media (max-width: 430px){
+  /* Marka metni olmadığı için 360–430px'te mod/süre ve butonlar rahat büyüyebilir. */
+  .topbar{
+    grid-template-columns:38px minmax(112px,1fr) auto!important;
+    column-gap:4px!important;
+    padding-right:7px!important;
+    padding-left:7px!important
+  }
+  .brand .logo-mark{width:33px!important;height:33px!important;border-radius:9px!important}
+  .game-mode-strip{max-width:124px!important;padding:4px 6px!important}
+  .game-mode-strip span:first-child{max-width:60px!important;font-size:11px!important}
+  .game-mode-strip span:last-child{font-size:12px!important;padding:4px 5px!important}
+  .top-actions{gap:4px!important}
+  .top-btn{width:38px!important;height:38px!important}
+
+  .modal-close{
+    top:var(--modal-close-top,16px)!important;
+    right:14px!important;
+    width:42px!important;
+    height:42px!important
+  }
+  #modalBody>h2{
+    min-height:42px!important;
+    margin-right:54px!important;
+    font-size:21px!important
+  }
+  .live-match-modal .modal-close{top:var(--modal-close-top,12px)!important;right:10px!important}
+}
+
+@media (max-width: 350px){
+  .topbar{grid-template-columns:34px minmax(100px,1fr) auto!important}
+  .top-btn{width:34px!important;height:34px!important}
+  .top-actions{gap:3px!important}
+  .game-mode-strip{max-width:112px!important}
+  .game-mode-strip span:first-child{max-width:52px!important;font-size:10px!important}
+  .game-mode-strip span:last-child{font-size:11px!important}
+}

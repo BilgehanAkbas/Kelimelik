@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<meta name="description" content="Kelimelik — Türkçe kelime tahmin oyunu.">
+<meta name="robots" content="index,follow">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://sozluk.gov.tr https://*.supabase.co wss://*.supabase.co; worker-src 'self'; manifest-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kelimelik">
+<meta property="og:description" content="Kelimelik'te paylaşılan bulmacayı çöz. Türkçe kelime tahmin oyununa katıl.">
+<meta property="og:image" content="https://kelime-lik.vercel.app/assets/social-card.png?v=19">
+<meta property="og:image:secure_url" content="https://kelime-lik.vercel.app/assets/social-card.png?v=19">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Kelimelik Türkçe kelime oyunu">
+<meta property="og:site_name" content="Kelimelik">
+<meta property="og:locale" content="tr_TR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Kelimelik">
+<meta name="twitter:description" content="Kelimelik'te paylaşılan bulmacayı çöz. Türkçe kelime tahmin oyununa katıl.">
+<meta name="twitter:image" content="https://kelime-lik.vercel.app/assets/social-card.png?v=19">
+<title>Kelimelik</title>
+<link rel="canonical" href="https://kelime-lik.vercel.app/">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="stylesheet" href="src/css/style.css">
+<link rel="stylesheet" href="src/css/mobile-fixes.css">
+</head>
+<body>
+
+<section id="homeScreen" class="home-screen">
+  <div class="home-ambient matrix-ambient" id="homeAmbient" aria-hidden="true">
+    <span class="ambient-halo"></span>
+  </div>
+  <div class="home-card home-enter-card">
+    <div class="home-logo home-enter home-enter-logo">
+      <span class="logo-mark large kelimelik-logo home-logo-mark" aria-hidden="true">
+        <i class="mk t1"></i><i class="mk t2"></i><i class="mk t3"></i><i class="mk t4"></i><i class="mk t5"></i>
+        <i class="mk b1"></i><i class="mk b2"></i><i class="mk b3"></i>
+      </span>
+      <div>
+        <h1>KELİMELİK</h1>
+        <p>Gizli kelimeyi 8 tahminde bul.</p>
+      </div>
+    </div>
+
+    <div class="home-example home-enter home-enter-demo" aria-hidden="true">
+      <div class="home-row animated-word-row">
+        <span class="animated-letter" data-index="0">K</span>
+        <span class="animated-letter" data-index="1">A</span>
+        <span class="animated-letter" data-index="2">L</span>
+        <span class="animated-letter" data-index="3">E</span>
+        <span class="animated-letter" data-index="4">M</span>
+        <i class="home-demo-divider"></i>
+        <b class="green-box animated-count" id="homeGreenCount">1</b>
+        <b class="yellow-box animated-count" id="homeYellowCount">2</b>
+        <b class="red-box animated-count" id="homeRedCount">2</b>
+      </div>
+      <div class="home-row muted">
+        <span></span><span></span><span></span><span></span><span></span>
+        <i class="home-demo-divider"></i>
+        <b class="green-box"></b><b class="yellow-box"></b><b class="red-box"></b>
+      </div>
+    </div>
+
+    <button id="startGameBtn" class="primary-home-btn home-enter home-enter-start"><span>Oyuna Başla</span><b aria-hidden="true">→</b></button>
+    <button id="homeHowBtn" class="secondary-home-btn home-enter home-enter-how">Nasıl oynanır?</button>
+    <button id="privacyBtn" class="privacy-home-btn home-enter home-enter-privacy">Privacy Policy</button>
+
+    <footer class="home-footer home-enter home-enter-footer">
+      <span>Designed &amp; Developed by
+        <a href="https://www.linkedin.com/in/bilgehan-akbas/"
+           target="_blank"
+           rel="noopener noreferrer">Bilgehan Akbaş</a>
+      </span>
+    </footer>
+  </div>
+</section>
+
+<main id="gameScreen" class="page" hidden>
+  <header class="topbar">
+    <a class="brand" href="#" id="brandHome" aria-label="Ana sayfaya dön">
+      <span class="logo-mark kelimelik-logo" aria-hidden="true">
+      <i class="mk t1"></i><i class="mk t2"></i><i class="mk t3"></i><i class="mk t4"></i><i class="mk t5"></i>
+      <i class="mk b1"></i><i class="mk b2"></i><i class="mk b3"></i>
+    </span>
+      <span class="brand-text">KELİMELİK</span>
+    </a>
+    <nav class="top-actions" aria-label="Oyun menüsü">
+      <button class="top-btn top-tooltip how-top-btn" id="gameHowBtn" aria-label="Nasıl oynanır" data-tooltip="Nasıl oynanır"><span class="top-icon">?</span></button>
+      <button class="top-btn top-tooltip share-top-btn" id="gameShareBtn" aria-label="Bulmacayı paylaş" data-tooltip="Bulmacayı paylaş"><svg class="top-share-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 16V4"></path>
+          <path d="M8 8l4-4 4 4"></path>
+          <path d="M5 12v7h14v-7"></path>
+        </svg></button>
+      <button class="top-btn top-tooltip new-game-top-btn" id="modeBtn" aria-label="Yeni oyun" data-tooltip="Yeni oyun"><span class="top-icon">↻</span></button>
+      <button class="top-btn top-tooltip profile-top-btn" id="profileBtn" aria-label="Profil" data-tooltip="Profil">
+        <svg class="top-profile-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="8" r="3.25"></circle>
+          <path d="M5.5 19c.8-3.4 3-5.25 6.5-5.25S17.7 15.6 18.5 19"></path>
+        </svg>
+      </button>
+    </nav>
+
+    <div class="game-mode-strip" id="gameModeStrip" aria-live="polite">
+      <span id="gameModeLabel">Kelimelik · 5 Harf</span>
+      <span id="gameTimerLabel">00:00</span>
+    </div>
+  </header>
+
+  <section class="game-area">
+    <div id="board" class="board"></div>
+  </section>
+
+  <div id="gameStatus" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <section class="keyboard-shell" aria-label="Oyun klavyesi">
+    <div id="keyboard" class="keyboard"></div>
+  </section>
+</main>
+
+<div class="modal-backdrop" id="modalBackdrop" hidden>
+  <section class="modal" role="dialog" aria-modal="true" aria-label="Kelimelik penceresi">
+    <button class="modal-close" id="modalClose" type="button" aria-label="Pencereyi kapat">×</button>
+    <div id="modalBody"></div>
+  </section>
+</div>
+
+<script src="src/js/game-core.js"></script>
+<script src="src/js/word-pools.js"></script>
+<script src="src/js/online-config.js"></script>
+<script src="src/js/online.js"></script>
+<script src="src/js/app.js"></script>
+<script src="src/js/ui-patches.js"></script>
+<script src="src/js/mobile-fixes.js"></script>
+</body>
+</html>

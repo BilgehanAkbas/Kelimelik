@@ -1,0 +1,125 @@
+name: Kelimelik Tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v7.0.0
+        with:
+          node-version: "20"
+          package-manager-cache: false
+
+      - name: JavaScript syntax
+        run: |
+          node --check src/js/app.js
+          node --check src/js/game-core.js
+          node --check src/js/online.js
+          node --check src/js/ui-patches.js
+          node --check src/js/mobile-fixes.js
+
+      - name: Kelimelik core tests
+        run: node tests/run-tests.js
+
+      - name: App migration smoke test
+        run: node tests/app-smoke.js
+
+      - name: Service Worker smoke test
+        run: node tests/sw-smoke.js
+
+      - name: Online profile smoke test
+        run: node tests/online-smoke.js
+
+      - name: Live multiplayer client smoke test
+        run: node tests/live-online-smoke.js
+
+      - name: Live multiplayer schema smoke test
+        run: node tests/live-schema-smoke.js
+
+      - name: Quick match and bot client smoke test
+        run: node tests/quick-bot-online-smoke.js
+
+      - name: Custom puzzle and social client smoke test
+        run: node tests/custom-social-online-smoke.js
+
+      - name: Custom puzzle and social schema smoke test
+        run: node tests/custom-social-schema-smoke.js
+
+      - name: Online session repair smoke test
+        run: node tests/session-repair-online-smoke.js
+
+      - name: Supabase SDK retry smoke test
+        run: node tests/sdk-retry-online-smoke.js
+
+      - name: Release hardening schema smoke test
+        run: node tests/release-hardening-schema-smoke.js
+
+      - name: Migration sanity smoke test
+        run: node tests/migration-sanity-smoke.js
+
+      - name: Word pool expansion smoke test
+        run: node tests/word-pool-expansion-smoke.js
+
+      - name: A2 answer pool and repeat protection smoke test
+        run: node tests/answer-pool-a2-smoke.js
+
+      - name: A3 word pool quality smoke test
+        run: node tests/word-pool-quality-a3-smoke.js
+
+      - name: Online UI cleanup smoke test
+        run: node tests/online-ui-cleanup-smoke.js
+
+      - name: Live competition regression smoke test
+        run: node tests/live-competition-regression-smoke.js
+
+      - name: Online history smoke test
+        run: node tests/online-history-smoke.js
+
+      - name: Bot progressive logic and close control smoke test
+        run: node tests/bot-progressive-close-smoke.js
+
+      - name: Defne early-game nerf smoke test
+        run: node tests/defne-nerf-smoke.js
+
+      - name: Incomplete exit and history limit smoke test
+        run: node tests/incomplete-exit-history-limit-smoke.js
+
+      - name: Hint no auto-win smoke test
+        run: node tests/hint-no-auto-win-smoke.js
+
+      - name: Profile and stats UI patch smoke test
+        run: node tests/profile-stats-ui-patch-smoke.js
+
+      - name: Anonymous auth circuit breaker smoke test
+        run: node tests/anonymous-auth-circuit-smoke.js
+
+      - name: Supabase privilege hardening smoke test
+        run: node tests/security-hardening-smoke.js
+
+      - name: Vercel deployment security smoke test
+        run: node tests/vercel-security-smoke.js
+
+      - name: Mobile visual fixes smoke test
+        run: node tests/mobile-visual-fixes-smoke.js
+
+      - name: Bot accuracy progression smoke test
+        run: node tests/bot-accuracy-progression-smoke.js
+
+      - name: Bot logic rebalance smoke test
+        run: node tests/bot-logic-rebalance-smoke.js
+
+      - name: Final cleanup smoke test
+        run: node tests/final-cleanup-smoke.js

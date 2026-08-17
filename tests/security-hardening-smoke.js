@@ -1,0 +1,22 @@
+const fs=require("fs");
+const path=require("path");
+const assert=require("assert");
+const ROOT=path.resolve(__dirname,"..");
+const sql=fs.readFileSync(path.join(ROOT,"supabase/migrations/20260816_013_security_privilege_hardening.sql"),"utf8").toLowerCase();
+const lengthSql=fs.readFileSync(path.join(ROOT,"supabase/migrations/20260816_012_multiplayer_length_stats.sql"),"utf8").toLowerCase();
+
+assert(sql.includes("revoke all privileges on all tables in schema public from public, anon, authenticated"));
+assert(sql.includes("revoke all privileges on all sequences in schema public from public, anon, authenticated"));
+assert(sql.includes("grant select on public.live_matches to authenticated"));
+assert(sql.includes("grant select on public.live_match_players to authenticated"));
+assert(sql.includes("grant select on public.live_match_guesses to authenticated"));
+assert(sql.includes("grant select on public.live_match_reactions to authenticated"));
+assert(sql.includes('create policy "participants can read live matches"'));
+assert(sql.includes("public.is_live_match_participant(match_id)"));
+assert(sql.includes("alter default privileges for role postgres in schema public"));
+assert(sql.includes("supabase_admin` platform tarafından yönetilen bir roldür"));
+assert(!sql.includes("alter default privileges for role supabase_admin in schema public"));
+assert(sql.includes('drop policy if exists "authenticated can read multiplayer length stats"'));
+assert(!lengthSql.includes("grant select on public.multiplayer_stats_by_length to authenticated"));
+assert(!lengthSql.includes('create policy "authenticated can read multiplayer length stats"'));
+console.log("✓ Supabase tablo/sequence/default privilege hardening smoke testi");

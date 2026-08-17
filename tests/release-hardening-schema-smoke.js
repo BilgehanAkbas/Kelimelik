@@ -1,0 +1,23 @@
+const fs=require("fs");
+const path=require("path");
+const assert=require("assert");
+const ROOT=path.resolve(__dirname,"..");
+const sql=fs.readFileSync(path.join(ROOT,"supabase/migrations/20260816_006_release_audit_hardening.sql"),"utf8");
+const app=fs.readFileSync(path.join(ROOT,"src/js/app.js"),"utf8");
+const style=fs.readFileSync(path.join(ROOT,"src/css/style.css"),"utf8");
+
+assert(sql.includes("revoke create on schema public from public, anon, authenticated"));
+assert(sql.includes("revoke select, insert, update, delete on public.profiles from public, anon, authenticated"));
+assert(sql.includes("revoke select, insert, update, delete on public.multiplayer_stats from public, anon, authenticated"));
+assert(sql.includes("alter default privileges in schema public revoke execute on functions from public"));
+assert(sql.includes("update public.profiles p\n  set nickname=clean_name"));
+assert(sql.includes("exception when unique_violation then"));
+assert(sql.includes('drop policy if exists "owner can update own profile" on public.profiles'));
+assert(sql.includes("if match_status<>'active' then raise exception 'Tepkiler yalnızca aktif maçta kullanılabilir'"));
+assert(sql.includes("if not exists(select 1 from public.profiles where id=uid) then"));
+assert(app.includes("function buildOnlineKeyboardState(mode,guesses)"));
+assert(app.includes("liveKeyboardHTML(state)"));
+assert(app.includes("showProfileSetup({returnTo:showCustomPuzzleBuilder,backTo:showShareMenu,backLabel:\"Paylaş\'a Dön\"})"));
+assert(style.includes(".live-key.feedback-green"));
+assert(style.includes(".live-key.used"));
+console.log("✓ Release hardening izinleri + online klavye/profil guard smoke testi");

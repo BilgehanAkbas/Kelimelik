@@ -1,0 +1,30 @@
+const fs=require("fs");
+const path=require("path");
+const assert=require("assert");
+const ROOT=path.resolve(__dirname,"..");
+const config=JSON.parse(fs.readFileSync(path.join(ROOT,"vercel.json"),"utf8"));
+const html=fs.readFileSync(path.join(ROOT,"index.html"),"utf8");
+const notFound=fs.readFileSync(path.join(ROOT,"404.html"),"utf8");
+const onlineConfig=fs.readFileSync(path.join(ROOT,"src/js/online-config.js"),"utf8");
+const online=fs.readFileSync(path.join(ROOT,"src/js/online.js"),"utf8");
+
+assert(html.includes('<link rel="canonical" href="https://kelime-lik.vercel.app/">'));
+assert(html.includes("https://kelime-lik.vercel.app/assets/social-card.png?v=19"));
+assert(html.includes("frame-ancestors 'none'"));
+assert(notFound.includes('href="/src/css/style.css"'));
+assert(notFound.includes('href="/assets/favicon.svg"'));
+assert(notFound.includes('href="/"'));
+assert(!notFound.includes('/Kelimelik/'));
+assert(!notFound.includes('style="'));
+
+const allHeaders=config.headers.flatMap(x=>x.headers||[]);
+const byKey=Object.fromEntries(allHeaders.map(x=>[x.key.toLowerCase(),x.value]));
+assert(byKey["content-security-policy"].includes("frame-ancestors 'none'"));
+assert.strictEqual(byKey["x-content-type-options"],"nosniff");
+assert.strictEqual(byKey["x-frame-options"],"DENY");
+assert.strictEqual(byKey["referrer-policy"],"strict-origin-when-cross-origin");
+assert(byKey["permissions-policy"].includes("camera=()"));
+assert(config.headers.some(x=>x.source==="/sw.js" && (x.headers||[]).some(h=>h.key==="Cache-Control" && h.value.includes("must-revalidate"))));
+assert(onlineConfig.includes("@supabase/supabase-js@2.112.3"));
+assert(online.includes("@supabase/supabase-js@2.112.3"));
+console.log("✓ Vercel response headers, canonical/404 ve SDK pin smoke testi");

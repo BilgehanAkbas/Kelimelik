@@ -1,0 +1,14 @@
+const fs=require("fs");
+const path=require("path");
+const assert=require("assert");
+const ROOT=path.resolve(__dirname,"..");
+const app=fs.readFileSync(path.join(ROOT,"src","js","app.js"),"utf8");
+const sql=fs.readFileSync(path.join(ROOT,"supabase","migrations","20260816_020_hint_no_auto_win.sql"),"utf8");
+assert(app.includes("word!==secretWord"));
+assert(app.includes("hiçbir koşulda gizli cevabı doğrudan yazıp oyunu otomatik kazandırmaz"));
+assert(!app.includes("const hintWord=(ranked[0]?.word) || WORDS.find(w=>w!==secretWord) || secretWord"));
+assert(sql.includes("aw.word<>secret"));
+assert(sql.includes("w.word<>secret"));
+assert(!sql.includes("hint:=secret"));
+assert(sql.includes("values(play.id,next_attempt,hint,public_fb,false)"));
+console.log("✓ İpucu gizli cevabı otomatik oynatmaz");
