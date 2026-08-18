@@ -1885,6 +1885,23 @@ test("Online Klasik mod tüm 4/5/6 uzunluklarında 5/6/7 tahmin kuralına sahip"
   assert(migration.includes("attempts:=clean_length+1"));
 });
 
+test("Mobil online oyun X düğmesi oyun scroll alanından fiziksel olarak ayrıdır",()=>{
+  const app=fs.readFileSync(path.join(ROOT,"src/js/app.js"),"utf8");
+  const css=fs.readFileSync(path.join(ROOT,"src/css/mobile-fixes.css"),"utf8");
+  const index=fs.readFileSync(path.join(ROOT,"index.html"),"utf8");
+
+  assert(index.includes('id="liveModalClose"'));
+  assert(index.includes('aria-label="Online oyunu kapat"'));
+  assert(app.includes('const liveClose=$("#liveModalClose")'));
+  assert(app.includes('regularClose.hidden=true'));
+  assert(app.includes('liveClose.hidden=false'));
+  assert(app.includes('const isActualOnlineGame=Boolean($("#liveMatchRoot"))'));
+  assert(app.includes('const liveModalCloseButton=$("#liveModalClose")'));
+  assert(css.includes('.modal-backdrop>.live-modal-close-fixed'));
+  assert(css.includes('position:fixed!important'));
+  assert(css.includes('.live-match-modal.live-close-pinned>.modal-close{display:none!important}'));
+});
+
 test("Dokümantasyon tek README dosyasında tutuluyor",()=>{
   for(const file of [
     "README.md",

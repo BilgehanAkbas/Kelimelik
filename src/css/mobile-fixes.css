@@ -364,3 +364,35 @@
   .game-mode-strip span:first-child{max-width:52px!important;font-size:10px!important}
   .game-mode-strip span:last-child{font-size:11px!important}
 }
+
+/* v1.2.37.2 — mobil online/bot kapatma düğmesi oyun scroll'undan tamamen ayrıldı. */
+.live-modal-close-fixed{display:none}
+@media(max-width:760px){
+  .modal-backdrop>.live-modal-close-fixed{
+    position:fixed!important;
+    top:var(--live-close-fixed-top,12px)!important;
+    left:var(--live-close-fixed-left,calc(100vw - 56px))!important;
+    right:auto!important;
+    z-index:5000!important;
+    width:44px!important;
+    height:44px!important;
+    margin:0!important;
+    padding:0!important;
+    place-items:center!important;
+    border:0!important;
+    border-radius:8px!important;
+    background:#0e0e0f!important;
+    color:#f1eeeb!important;
+    font:400 30px/1 Arial,Helvetica,sans-serif!important;
+    box-shadow:0 6px 20px rgba(0,0,0,.35)!important;
+    transform:none!important;
+    touch-action:manipulation!important;
+    user-select:none!important;
+    -webkit-user-select:none!important;
+    pointer-events:auto!important
+  }
+  .modal-backdrop>.live-modal-close-fixed.show{display:grid!important}
+  /* Online oyun sırasında modalın içindeki eski X kesinlikle görünmez. */
+  .live-match-modal.live-close-pinned>.modal-close{display:none!important}
+}
+

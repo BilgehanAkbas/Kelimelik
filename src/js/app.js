@@ -2306,39 +2306,65 @@ let modalReturnFocus=null;
 
 function clearLiveModalClosePin(){
   const modal=modalBody?.parentNode;
-  if(!modal)return;
-  modal.classList.remove("live-close-pinned");
-  modal.style.removeProperty?.("--live-close-fixed-top");
-  modal.style.removeProperty?.("--live-close-fixed-left");
+  const regularClose=$("#modalClose");
+  const liveClose=$("#liveModalClose");
+
+  modal?.classList.remove("live-close-pinned");
+  regularClose?.removeAttribute("hidden");
+  if(liveClose){
+    liveClose.hidden=true;
+    liveClose.classList.remove("show");
+    liveClose.style.removeProperty("--live-close-fixed-top");
+    liveClose.style.removeProperty("--live-close-fixed-left");
+  }
 }
 
 function pinLiveModalCloseButton(){
   const modal=modalBody?.parentNode;
-  const close=$("#modalClose");
-  if(!modal || !close)return false;
+  const regularClose=$("#modalClose");
+  const liveClose=$("#liveModalClose");
+  if(!modal || !regularClose || !liveClose)return false;
 
-  const shouldPin=window.innerWidth<=760 && modal.classList.contains("live-match-modal");
+  /*
+   * Mobil online/bot oyununda kapatma düğmesi artık modalın çocuğu değildir.
+   * #liveModalClose doğrudan backdrop altında durur; bu yüzden oyun içeriği,
+   * modalBody scroll'u veya tahta boyu düğmeyi beraberinde hareket ettiremez.
+   */
+  const isActualOnlineGame=Boolean($("#liveMatchRoot"));
+  const shouldPin=window.innerWidth<=760 &&
+    modal.classList.contains("live-match-modal") &&
+    isActualOnlineGame;
+
   if(!shouldPin){
     clearLiveModalClosePin();
     return false;
   }
 
   const modalRect=modal.getBoundingClientRect?.();
-  const closeRect=close.getBoundingClientRect?.();
   if(!modalRect)return false;
 
-  const closeSize=Math.max(44,Number(closeRect?.width)||44);
-  const viewportWidth=window.visualViewport?.width || window.innerWidth || document.documentElement.clientWidth;
-  const viewportTop=window.visualViewport?.offsetTop || 0;
-  const safeTop=viewportTop+8;
-  const top=Math.max(safeTop,Math.round(modalRect.top+12));
-  const left=Math.min(
-    viewportWidth-closeSize-8,
-    Math.max(8,Math.round(modalRect.right-closeSize-12))
+  const visual=window.visualViewport;
+  const viewportLeft=Number(visual?.offsetLeft)||0;
+  const viewportTop=Number(visual?.offsetTop)||0;
+  const viewportWidth=Number(visual?.width)||window.innerWidth||document.documentElement.clientWidth;
+  const closeSize=44;
+  const edge=10;
+
+  const top=Math.max(viewportTop+edge,Math.round(modalRect.top+12));
+  const modalRight=Math.min(viewportLeft+viewportWidth,Number(modalRect.right)||viewportLeft+viewportWidth);
+  const left=Math.max(
+    viewportLeft+edge,
+    Math.min(
+      viewportLeft+viewportWidth-closeSize-edge,
+      Math.round(modalRight-closeSize-12)
+    )
   );
 
-  modal.style.setProperty("--live-close-fixed-top",`${top}px`);
-  modal.style.setProperty("--live-close-fixed-left",`${left}px`);
+  regularClose.hidden=true;
+  liveClose.style.setProperty("--live-close-fixed-top",`${top}px`);
+  liveClose.style.setProperty("--live-close-fixed-left",`${left}px`);
+  liveClose.hidden=false;
+  liveClose.classList.add("show");
   modal.classList.add("live-close-pinned");
   return true;
 }
@@ -2395,7 +2421,12 @@ function showModal(html,{closeAction=null,bodyClass=""}={}){
   modalBackdrop.hidden=false;
   requestAnimationFrame(()=>{
     alignModalCloseButton();
-    $("#modalClose")?.focus();
+    const liveClose=$("#liveModalClose");
+    if(liveClose && !liveClose.hidden){
+      liveClose.focus();
+    }else{
+      $("#modalClose")?.focus();
+    }
   });
 }
 
@@ -5379,6 +5410,14 @@ window.addEventListener("resize",updateResponsiveBoardSize);
 const modalCloseButton=$("#modalClose");
 if(modalCloseButton){
   modalCloseButton.onclick=e=>{
+    e?.preventDefault?.();
+    e?.stopPropagation?.();
+    closeOrBackModal();
+  };
+}
+const liveModalCloseButton=$("#liveModalClose");
+if(liveModalCloseButton){
+  liveModalCloseButton.onclick=e=>{
     e?.preventDefault?.();
     e?.stopPropagation?.();
     closeOrBackModal();
