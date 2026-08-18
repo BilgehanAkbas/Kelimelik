@@ -15,7 +15,9 @@ const liveGuard=app.slice(app.indexOf('const isMobileLiveModal='),app.indexOf('/
 assert(!liveGuard.includes('getBoundingClientRect'),"Live X başlık scroll geometrisine bağlı olmamalı");
 assert(css.includes('.live-match-modal #modalBody{'));
 assert(css.includes('overflow-y:auto!important'));
+assert(css.includes('overflow:visible!important'),"Live #modalBody ayrı scroll alanı olmamalı");
+assert(!css.includes('flex-direction:column!important'),"Live modal iç-scroll düzeni geri gelmemeli");
 assert(css.includes('.live-match-modal .modal-close{'));
 assert(css.includes('position:absolute!important'));
 assert(!css.includes('.live-match-modal.live-close-pinned .modal-close'));
-console.log("✓ Mobil online X scroll/render bağımsızlığı regression testi");
+console.log("✓ Mobil online X başlıkla birlikte kayar; viewporta yapışmaz regression testi");

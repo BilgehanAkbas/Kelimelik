@@ -185,30 +185,27 @@
     line-height:1.12!important
   }
 
-  /* Live/bot modal header follows the same close baseline. */
+  /* Live/bot modal: scroll modalın kendisinde. X başlıkla birlikte kayar. */
   .live-match-modal{
     --close-top:14px;
     --close-right:12px;
+    display:block!important;
     max-height:calc(100dvh - 10px)!important;
     padding-top:14px!important;
     padding-right:10px!important;
     padding-bottom:max(12px,env(safe-area-inset-bottom))!important;
     padding-left:10px!important;
-    overflow:hidden!important
-  }
-  /* Online/bot içeriği kendi içinde kayar; X modal kabuğunda sabit kalır. */
-  .live-match-modal{
-    display:flex!important;
-    flex-direction:column!important;
-    overflow:hidden!important;
-  }
-  .live-match-modal #modalBody{
-    flex:1 1 auto!important;
-    min-height:0!important;
     overflow-y:auto!important;
     overflow-x:hidden!important;
     overscroll-behavior:contain!important;
     -webkit-overflow-scrolling:touch
+  }
+  /* #modalBody ayrı bir scroll alanı değildir. Böylece X viewport'a yapışmaz. */
+  .live-match-modal #modalBody{
+    min-height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+    overscroll-behavior:auto!important
   }
   .live-match-modal .modal-close{
     position:absolute!important;

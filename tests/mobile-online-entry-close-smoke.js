@@ -13,8 +13,10 @@ assert(!mobile.includes("alignModalCloseButton=function"));
 const mobileCss=fs.readFileSync(path.join(ROOT,"src/css/mobile-fixes.css"),"utf8");
 assert(app.includes('modal.style.setProperty("--modal-close-top","14px")'));
 assert(!app.includes("function pinLiveModalCloseButton"));
-assert(mobileCss.includes('overflow:hidden!important;'),"Mobil live modal dış scroll kilidi eksik");
-assert(mobileCss.includes('flex-direction:column!important;'),"Mobil live modal flex sabitleme eksik");
+assert(mobileCss.includes('overflow-y:auto!important;'),"Mobil live modal kendi scroll alanını kullanmalı");
+assert(mobileCss.includes('.live-match-modal #modalBody{'),"Live modal body kuralı eksik");
+assert(mobileCss.includes('overflow:visible!important;'),"#modalBody ayrı scroll alanı olmamalı");
+assert(!mobileCss.includes('flex-direction:column!important;'),"Live modal flex-scroll X'i ekrana sabitlememeli");
 
 // Pre-game online headers must not show the fake 00:00 timer.
 const botCountdown=app.slice(app.indexOf('function renderBotMatchNormal'),app.indexOf('function renderLiveMatch'));
