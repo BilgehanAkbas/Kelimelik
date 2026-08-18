@@ -197,8 +197,14 @@
     overflow:hidden!important
   }
   /* Online/bot içeriği kendi içinde kayar; X modal kabuğunda sabit kalır. */
+  .live-match-modal{
+    display:flex!important;
+    flex-direction:column!important;
+    overflow:hidden!important;
+  }
   .live-match-modal #modalBody{
-    max-height:calc(100dvh - 38px - env(safe-area-inset-bottom))!important;
+    flex:1 1 auto!important;
+    min-height:0!important;
     overflow-y:auto!important;
     overflow-x:hidden!important;
     overscroll-behavior:contain!important;

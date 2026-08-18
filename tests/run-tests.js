@@ -1244,7 +1244,7 @@ test("Stabil sürüm canonical adresi koruyor, puzzle OG URL'sini sabitlemiyor",
   const html=fs.readFileSync(path.join(ROOT,"index.html"),"utf8");
   assert(!html.includes('<meta property="og:url"'));
   assert(html.includes('<link rel="canonical" href="https://kelime-lik.vercel.app/">'));
-  assert(html.includes('assets/social-card.png?v=19'));
+  assert(html.includes('assets/social-card.png?v=20'));
 });
 
 test("README oyun bilgileri, kod bütünlüğü ve çalıştırma akışını anlatıyor; sürüm günlüğü taşımıyor",()=>{

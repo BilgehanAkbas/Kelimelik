@@ -15,6 +15,8 @@ assert(app.includes('modal.classList.add("live-close-pinned")'));
 assert(app.includes('window.visualViewport.addEventListener("scroll",syncLiveCloseToViewport)'));
 const mobileCss=fs.readFileSync(path.join(ROOT,"src/css/mobile-fixes.css"),"utf8");
 assert(mobileCss.includes('.live-match-modal.live-close-pinned .modal-close'));
+assert(mobileCss.includes('overflow:hidden!important;'),"Mobil live modal dış scroll kilidi eksik");
+assert(mobileCss.includes('flex-direction:column!important;'),"Mobil live modal flex sabitleme eksik");
 assert(mobileCss.includes('position:fixed!important'));
 
 // Pre-game online headers must not show the fake 00:00 timer.

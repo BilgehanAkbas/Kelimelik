@@ -9,7 +9,7 @@ const onlineConfig=fs.readFileSync(path.join(ROOT,"src/js/online-config.js"),"ut
 const online=fs.readFileSync(path.join(ROOT,"src/js/online.js"),"utf8");
 
 assert(html.includes('<link rel="canonical" href="https://kelime-lik.vercel.app/">'));
-assert(html.includes("https://kelime-lik.vercel.app/assets/social-card.png?v=19"));
+assert(html.includes("https://kelime-lik.vercel.app/assets/social-card.png?v=20"));
 assert(html.includes("frame-ancestors 'none'"));
 assert(notFound.includes('href="/src/css/style.css"'));
 assert(notFound.includes('href="/assets/favicon.svg"'));
