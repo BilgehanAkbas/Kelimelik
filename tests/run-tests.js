@@ -1231,13 +1231,14 @@ test("Stabil sürüm canonical adresi koruyor, puzzle OG URL'sini sabitlemiyor",
   assert(html.includes('assets/social-card.png?v=19'));
 });
 
-test("README oyun ve kod yapısını anlatıyor; sürüm günlüğü taşımıyor",()=>{
+test("README oyun bilgileri, kod bütünlüğü ve çalıştırma akışını anlatıyor; sürüm günlüğü taşımıyor",()=>{
   const readme=fs.readFileSync(path.join(ROOT,"README.md"),"utf8");
   assert(readme.startsWith("# Kelimelik"));
-  assert(readme.includes("## Oyun Modları"));
-  assert(readme.includes("## Kod Yapısı"));
-  assert(readme.includes("## Supabase"));
-  assert(readme.includes("## Test"));
+  assert(readme.includes("## Oyun Bilgileri"));
+  assert(readme.includes("## Kod Bütünlüğü"));
+  assert(readme.includes("## Nasıl Çalıştırılır"));
+  assert(readme.includes("### Supabase"));
+  assert(readme.includes("### Test"));
   assert(!readme.includes("Son Sürüm"));
   assert(!/v\d+\.\d+\.\d+/.test(readme));
   assert(!readme.includes("CI compatibility"));

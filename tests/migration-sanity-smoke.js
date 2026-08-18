@@ -64,5 +64,6 @@ assert(!/grant\s+(?:select|insert|update|delete|all)[^;]*bot_match_secrets/gi.te
 assert(!/grant\s+(?:select|insert|update|delete|all)[^;]*custom_puzzle_secrets/gi.test(combined));
 const readme=fs.readFileSync(path.join(ROOT,"README.md"),"utf8");
 assert(readme.includes("supabase/migrations/"));
-assert(readme.includes("## Kod Yapısı"));
+assert(readme.includes("## Kod Bütünlüğü"));
+assert(readme.includes("## Nasıl Çalıştırılır"));
 console.log("✓ Migration sırası, secret grantleri ve SECURITY DEFINER search_path sanity testi");
