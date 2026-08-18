@@ -38,6 +38,8 @@ const context={
     keys(){return Promise.resolve([
       "kelimelik-v1.2.36-modal-close-align",
       "kelimelik-ui-stable",
+      "kelimelik-mobile-online-bot-final",
+      "kelimelik-room-bot-reasoning-final",
       "another-project-cache"
     ]);},
     delete(name){deleted.push(name);return Promise.resolve(true);}
@@ -57,7 +59,7 @@ async function run(){
   let p;
   listeners.install({waitUntil(x){p=x;}});
   await p;
-  assert.strictEqual(opened,"kelimelik-ui-stable");
+  assert.strictEqual(opened,"kelimelik-room-bot-reasoning-final");
   for(const asset of [
     "./src/css/mobile-fixes.css",
     "./src/js/mobile-fixes.js",
@@ -69,7 +71,9 @@ async function run(){
   listeners.activate({waitUntil(x){p=x;}});
   await p;
   assert(deleted.includes("kelimelik-v1.2.36-modal-close-align"));
-  assert(!deleted.includes("kelimelik-ui-stable"));
+  assert(deleted.includes("kelimelik-ui-stable"));
+  assert(deleted.includes("kelimelik-mobile-online-bot-final"));
+  assert(!deleted.includes("kelimelik-room-bot-reasoning-final"));
   assert(!deleted.includes("another-project-cache"));
   assert.strictEqual(claimed,true);
 
@@ -100,7 +104,7 @@ async function run(){
   });
   assert.strictEqual(intercepted,false);
 
-  console.log("✓ v1.2.37 Service Worker cache, cleanup ve online-config davranışı");
+  console.log("✓ Service Worker final cache, cleanup ve online-config davranışı");
 }
 
 run().catch(error=>{console.error(error);process.exit(1);});

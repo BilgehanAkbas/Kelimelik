@@ -1979,9 +1979,6 @@ button,a{touch-action:manipulation}
   border-right-color:#4c6748;border-radius:50%;animation:quickSearchSpin .95s linear infinite;
   will-change:transform
 }
-.quick-search-time{position:relative;z-index:1;display:grid;place-items:center;gap:1px;line-height:1}
-.quick-search-time strong{font:900 20px/1 ui-monospace,SFMono-Regular,Consolas,monospace;color:#e8e4df}
-.quick-search-time small{color:#85817d;font-size:8px;font-weight:900;letter-spacing:.7px;text-transform:uppercase}
 @keyframes quickSearchSpin{to{transform:rotate(360deg)}}
 .quick-bot-slot{width:min(100%,420px)}
 .quick-bot-slot .start-btn{width:100%}

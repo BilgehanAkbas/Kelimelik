@@ -53,10 +53,11 @@ assert(css.includes('justify-content:center!important'));
 assert(css.includes('position:static!important'));
 
 assert(app.includes("Özel oda oluştur veya 6 haneli oda koduyla katıl."));
-assert(app.includes('id="quickElapsed"'));
+assert(!app.includes('id="quickElapsed"'));
+assert(app.includes('aria-label="Rakip aranıyor"'));
 assert(app.includes('if(!root.querySelector(".quick-waiting-card"))'));
 assert(css.includes(".quick-search-ring::before"));
-assert(css.includes(".quick-search-time strong"));
+assert(!css.includes(".quick-search-time strong"));
 
 
 // v1.2.33: online tahta tek oyunculu Klasik kutu ölçüsünü/animasyonlarını kullanır,

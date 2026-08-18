@@ -1,7 +1,6 @@
 const CACHE_PREFIX="kelimelik-";
-// mobile header sizing + fixed online modal close + UI asset refresh
-// legacy-ci-marker: const CACHE="kelimelik-v1.2.36-modal-close-align"
-const CACHE="kelimelik-ui-stable";
+// room copy + candidate-based bot reasoning + UI asset refresh
+const CACHE="kelimelik-room-bot-reasoning-final";
 const ASSETS=[
   "./",
   "./index.html",

@@ -33,7 +33,9 @@ assert.deepStrictEqual(files,[
   "20260817_026_efe_nerf.sql",
   "20260817_027_bot_accuracy_progression.sql",
   "20260817_028_bot_logic_rebalance.sql",
-  "20260817_029_final_cleanup_hardening.sql"
+  "20260817_029_final_cleanup_hardening.sql",
+  "20260818_030_bot_solve_guard.sql",
+  "20260818_031_bot_candidate_reasoning.sql"
 ]);
 const combined=files.map(f=>fs.readFileSync(path.join(DIR,f),"utf8")).join("\n");
 for(const file of files){

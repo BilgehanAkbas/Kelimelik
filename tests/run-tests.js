@@ -404,7 +404,8 @@ test("PWA manifest release alanları ve ikonlar geçerli",()=>{
 
 test("Service Worker yeni cache adına sahip ve eski cacheleri siliyor",()=>{
   const sw=fs.readFileSync(path.join(ROOT,"sw.js"),"utf8");
-  assert(sw.includes('const CACHE="kelimelik-v1.2.36-modal-close-align"'));
+  assert(sw.includes('const CACHE_PREFIX="kelimelik-"'));
+  assert(/const CACHE="kelimelik-[^"]+"/.test(sw));
   assert(sw.includes("key.startsWith(CACHE_PREFIX) && key!==CACHE"));
   assert(sw.includes("self.skipWaiting()"));
   assert(sw.includes("self.clients.claim()"));
@@ -682,15 +683,15 @@ test("Çok Oyunculu kart açıklamaları kısa metinleri kullanıyor",()=>{
   assert(!app.includes("Efe, Defne veya Atlas'a karşı insan temposunda canlı maç oyna"));
 });
 
-test("Hızlı eşleşme animasyonu DOM yeniden kurulmadan akıcı güncelleniyor",()=>{
+test("Hızlı eşleşme animasyonu görünür sayaç olmadan akıcı çalışıyor",()=>{
   const app=fs.readFileSync(path.join(ROOT,"src/js/app.js"),"utf8");
   const css=fs.readFileSync(path.join(ROOT,"src/css/style.css"),"utf8");
   assert(app.includes('if(!root.querySelector(".quick-waiting-card"))'));
-  assert(app.includes('id="quickElapsed"'));
+  assert(!app.includes('id="quickElapsed"'));
   assert(app.includes('id="quickBotSlot"'));
-  assert(app.includes('elapsedEl.textContent=String(elapsed)'));
+  assert(app.includes('aria-label="Rakip aranıyor"'));
   assert(css.includes(".quick-search-ring::before"));
-  assert(css.includes(".quick-search-time strong"));
+  assert(!css.includes(".quick-search-time strong"));
   assert(css.includes("animation:quickSearchSpin .95s linear infinite"));
 });
 
@@ -1458,12 +1459,14 @@ test("Çözülmeyen günlük geçmişi cevabı ve anlam butonunu saklıyor",()=>
 
 
 
-test("Mobil modal kapatma butonu tüm ekranlarda ilk başlıkla hizalanıyor",()=>{
+test("Modal kapatma butonu yalnız gerçek üst başlıkla hizalanıyor",()=>{
   const css=fs.readFileSync(path.join(ROOT,"src/css/style.css"),"utf8");
   const app=fs.readFileSync(path.join(ROOT,"src/js/app.js"),"utf8");
 
   assert(app.includes("function alignModalCloseButton()"));
-  assert(app.includes('modalBody.querySelector?.("h2")'));
+  assert(app.includes("Array.from(modalBody.children||[])"));
+  assert(app.includes('modalBody.querySelector?.(".live-match-head h2")'));
+  assert(!app.includes('const heading=modalBody.querySelector?.("h2")'));
   assert(app.includes('modal.style.setProperty("--modal-close-top"'));
   assert(app.includes('requestAnimationFrame(alignModalCloseButton)'));
   assert(app.includes('new MutationObserver'));

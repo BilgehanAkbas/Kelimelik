@@ -2311,7 +2311,16 @@ function alignModalCloseButton(){
 
   if(typeof modal.style?.removeProperty==="function")modal.style.removeProperty("--modal-close-top");
   else if(modal.style)delete modal.style["--modal-close-top"];
-  const heading=modalBody.querySelector?.("h2");
+
+  /*
+   * Yalnız gerçek modal başlığını referans al. Sonuç kartı, hızlı eşleşme
+   * kartı vb. içerideki h2'ler X'i aşağı sürüklememeli. Canlı maçta ise
+   * başlık, live-match-head içinde bulunduğundan onu özel olarak kullanıyoruz.
+   */
+  const directHeading=Array.from(modalBody.children||[])
+    .find(node=>String(node?.tagName||"").toUpperCase()==="H2") || null;
+  const liveHeading=modalBody.querySelector?.(".live-match-head h2") || null;
+  const heading=directHeading || liveHeading;
   if(!heading)return;
 
   const modalRect=modal.getBoundingClientRect?.();
@@ -2319,9 +2328,10 @@ function alignModalCloseButton(){
   const closeRect=close.getBoundingClientRect?.();
   if(!modalRect || !headingRect)return;
 
-  const closeHeight=Number(closeRect?.height)||46;
+  const closeHeight=Number(closeRect?.height)||44;
+  const headingHeight=Number(headingRect?.height)||closeHeight;
   const relativeTop=(Number(headingRect.top)||0)-(Number(modalRect.top)||0)
-    + Math.max(0,((Number(headingRect.height)||closeHeight)-closeHeight)/2);
+    + ((headingHeight-closeHeight)/2);
   const minTop=window.innerWidth<=760?8:10;
   modal.style.setProperty("--modal-close-top",`${Math.max(minTop,Math.round(relativeTop))}px`);
 }
@@ -3934,7 +3944,7 @@ function liveRoomInviteHTML(state){
     <section class="live-invite-card">
       <span>Oda Kodu</span>
       <strong>${escapeHTML(state.roomCode)}</strong>
-      <p>Arkadaşına kodu veya davet bağlantısını gönder. İkinci oyuncu katılınca 3-2-1 geri sayımı otomatik başlayacak.</p>
+      <p>Arkadaşına kodu veya davet bağlantısını gönder. İkinci oyuncu katılınca oyun 3 saniye sonra otomatik başlayacak.</p>
       <div class="live-invite-actions">
         <button class="start-btn" id="copyLiveLinkBtn">Davet Bağlantısını Kopyala</button>
         <button class="modal-back-btn" id="copyLiveCodeBtn">Kodu Kopyala</button>
@@ -4059,7 +4069,6 @@ function renderBotMatchNormal(state,root,{status,modeText,timer}){
       <div class="live-match-shell bot-normal-shell is-countdown" id="liveMatchShell">
         <header class="live-match-head bot-normal-head">
           <div class="live-head-mode"><h2>${escapeHTML(modeText)}</h2></div>
-          <div class="live-match-time">00:00</div>
         </header>
         ${liveStatusBanner(state)}
         <div class="live-reaction-pop" id="liveReactionPop" aria-live="polite"></div>
@@ -4132,7 +4141,6 @@ function renderLiveMatch(){
       <div class="live-match-shell is-countdown" id="liveMatchShell">
         <header class="live-match-head">
           <div class="live-head-mode"><h2>${escapeHTML(modeText)}</h2></div>
-          <div class="live-match-time">00:00</div>
         </header>
         ${liveStatusBanner(state)}
         <div class="live-reaction-pop" id="liveReactionPop" aria-live="polite"></div>
@@ -4159,7 +4167,7 @@ function renderLiveMatch(){
     <div class="live-match-shell" id="liveMatchShell">
       <header class="live-match-head">
         <div class="live-head-mode"><h2>${escapeHTML(modeText)}</h2></div>
-        <div class="live-match-time">${timer}</div>
+        ${status==="active"?`<div class="live-match-time">${timer}</div>`:""}
       </header>
       ${status==="active"?liveStatusBanner(state):""}
       ${liveRoomInviteHTML(state)}
@@ -4760,12 +4768,7 @@ function renderQuickWaiting(){
   if(!root.querySelector(".quick-waiting-card")){
     root.innerHTML=`
       <div class="quick-waiting-card">
-        <span class="quick-search-ring" role="status" aria-label="${elapsed} saniyedir rakip aranıyor">
-          <span class="quick-search-time">
-            <strong id="quickElapsed">${elapsed}</strong>
-            <small>sn</small>
-          </span>
-        </span>
+        <span class="quick-search-ring" role="status" aria-label="Rakip aranıyor"></span>
         <h2>Rakip Aranıyor</h2>
         <p>${quickMatchSession.mode==="classic"?`Klasik · ${quickMatchSession.length} Harf`:`Kelimelik · ${quickMatchSession.length} Harf`}</p>
         <small>Aynı modu seçen oyuncular arasından performansı sana en yakın rakip önceliklendiriliyor.</small>
@@ -4777,10 +4780,8 @@ function renderQuickWaiting(){
     $("#quickCancelBtn").onclick=cancelQuickMatchAndMenu;
   }
 
-  const elapsedEl=$("#quickElapsed");
-  if(elapsedEl)elapsedEl.textContent=String(elapsed);
   root.querySelector(".quick-search-ring")
-    ?.setAttribute("aria-label",`${elapsed} saniyedir rakip aranıyor`);
+    ?.setAttribute("aria-label","Rakip aranıyor");
 
   const botSlot=$("#quickBotSlot");
   if(botReady && botSlot && !$("#quickBotContinueBtn")){

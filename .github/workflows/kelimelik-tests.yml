@@ -115,11 +115,20 @@ jobs:
       - name: Mobile visual fixes smoke test
         run: node tests/mobile-visual-fixes-smoke.js
 
+      - name: Mobile online entry and close alignment smoke test
+        run: node tests/mobile-online-entry-close-smoke.js
+
       - name: Bot accuracy progression smoke test
         run: node tests/bot-accuracy-progression-smoke.js
 
       - name: Bot logic rebalance smoke test
         run: node tests/bot-logic-rebalance-smoke.js
+
+      - name: Bot solve guard smoke test
+        run: node tests/bot-solve-guard-smoke.js
+
+      - name: Room copy and bot candidate reasoning smoke test
+        run: node tests/room-copy-bot-reasoning-smoke.js
 
       - name: Final cleanup smoke test
         run: node tests/final-cleanup-smoke.js

@@ -4,44 +4,7 @@
   const MOBILE_MAX=760;
 
 
-  /*
-   * app.js başlığı X düğmesinden kısa olduğunda negatif merkezleme
-   * farkını sıfırlıyordu. Bu da Privacy / Nasıl oynanır gibi iç içe
-   * başlıklarda X'i birkaç piksel aşağıda bırakıyordu. Başlığın ve
-   * düğmenin gerçek yüksekliklerini tam merkezleyerek Çok Oyunculu
-   * ekranındaki görsel ekseni tüm modallara taşır.
-   */
-  if(typeof alignModalCloseButton==="function"){
-    alignModalCloseButton=function(){
-      const body=document.getElementById("modalBody");
-      const modal=body?.parentNode;
-      const close=document.getElementById("modalClose");
-      if(!modal || !close)return;
-
-      if(typeof modal.style?.removeProperty==="function"){
-        modal.style.removeProperty("--modal-close-top");
-      }
-
-      const heading=body.querySelector?.("h2");
-      if(!heading)return;
-
-      const modalRect=modal.getBoundingClientRect?.();
-      const headingRect=heading.getBoundingClientRect?.();
-      const closeRect=close.getBoundingClientRect?.();
-      if(!modalRect || !headingRect)return;
-
-      const closeHeight=Number(closeRect?.height)||44;
-      const headingHeight=Number(headingRect?.height)||closeHeight;
-      const relativeTop=(Number(headingRect.top)||0)-(Number(modalRect.top)||0)
-        + ((headingHeight-closeHeight)/2);
-      const minTop=window.innerWidth<=MOBILE_MAX?8:10;
-
-      modal.style.setProperty(
-        "--modal-close-top",
-        `${Math.max(minTop,Math.round(relativeTop))}px`
-      );
-    };
-  }
+  /* Modal X hizalaması app.js içinde tek kaynaktan yönetilir. */
 
   /* On mobile the center chip only needs the mode name; the timer keeps priority. */
   if(typeof gameModeLabelText==="function"){
