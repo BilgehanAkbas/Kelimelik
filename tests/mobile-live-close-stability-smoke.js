@@ -1,0 +1,21 @@
+const fs=require("fs");
+const path=require("path");
+const assert=require("assert");
+const ROOT=path.resolve(__dirname,"..");
+const app=fs.readFileSync(path.join(ROOT,"src","js","app.js"),"utf8");
+const css=fs.readFileSync(path.join(ROOT,"src","css","mobile-fixes.css"),"utf8");
+const index=fs.readFileSync(path.join(ROOT,"index.html"),"utf8");
+
+assert(!index.includes('id="liveModalClose"'),"İkinci/ayrı live X tekrar eklenmemeli");
+assert(!app.includes('function pinLiveModalCloseButton'),"Live X viewport pin hesabı geri gelmemeli");
+assert(!app.includes('--live-close-fixed-top'),"Live X scroll koordinatı tutulmamalı");
+assert(app.includes('const isMobileLiveModal=window.innerWidth<=760'));
+assert(app.includes('modal.style.setProperty("--modal-close-top","14px")'));
+const liveGuard=app.slice(app.indexOf('const isMobileLiveModal='),app.indexOf('/* Normal modallar'));
+assert(!liveGuard.includes('getBoundingClientRect'),"Live X başlık scroll geometrisine bağlı olmamalı");
+assert(css.includes('.live-match-modal #modalBody{'));
+assert(css.includes('overflow-y:auto!important'));
+assert(css.includes('.live-match-modal .modal-close{'));
+assert(css.includes('position:absolute!important'));
+assert(!css.includes('.live-match-modal.live-close-pinned .modal-close'));
+console.log("✓ Mobil online X scroll/render bağımsızlığı regression testi");

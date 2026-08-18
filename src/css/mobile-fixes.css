@@ -211,16 +211,11 @@
     -webkit-overflow-scrolling:touch
   }
   .live-match-modal .modal-close{
+    position:absolute!important;
     top:var(--modal-close-top,14px)!important;
-    right:12px!important
-  }
-  /* Mobil online/bot X: scroll edilen #modalBody'den tamamen bağımsız. */
-  .live-match-modal.live-close-pinned .modal-close{
-    position:fixed!important;
-    top:var(--live-close-fixed-top)!important;
-    left:var(--live-close-fixed-left)!important;
-    right:auto!important;
-    z-index:1002!important;
+    right:12px!important;
+    left:auto!important;
+    z-index:300!important;
     transform:none!important
   }
   .live-match-head,.bot-normal-head{
@@ -364,45 +359,3 @@
   .game-mode-strip span:first-child{max-width:52px!important;font-size:10px!important}
   .game-mode-strip span:last-child{font-size:11px!important}
 }
-
-/* v1.2.37.3 — mobil online/bot X gerçek viewport katmanında. */
-.live-modal-close-fixed{display:none}
-
-html.mobile-live-game-open,
-body.mobile-live-game-open{
-  overflow:hidden!important;
-  overscroll-behavior:none!important
-}
-
-@media(max-width:760px){
-  body>.live-modal-close-fixed{
-    position:fixed!important;
-    top:max(10px,env(safe-area-inset-top))!important;
-    right:max(10px,env(safe-area-inset-right))!important;
-    bottom:auto!important;
-    left:auto!important;
-    z-index:2147483647!important;
-    width:46px!important;
-    height:46px!important;
-    margin:0!important;
-    padding:0!important;
-    place-items:center!important;
-    border:1px solid #303034!important;
-    border-radius:10px!important;
-    background:#0e0e0f!important;
-    color:#f1eeeb!important;
-    font:400 31px/1 Arial,Helvetica,sans-serif!important;
-    box-shadow:0 7px 24px rgba(0,0,0,.52)!important;
-    transform:none!important;
-    translate:none!important;
-    touch-action:manipulation!important;
-    user-select:none!important;
-    -webkit-user-select:none!important;
-    pointer-events:auto!important;
-  }
-  body>.live-modal-close-fixed.show{display:grid!important}
-
-  /* Gerçek online/bot maçında modalın kendi X'i hiçbir koşulda çizilmez. */
-  .live-match-modal.live-close-pinned>.modal-close{display:none!important}
-}
-

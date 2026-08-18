@@ -1495,6 +1495,7 @@ test("Modal kapatma butonu yalnız gerçek üst başlıkla hizalanıyor",()=>{
   const app=fs.readFileSync(path.join(ROOT,"src/js/app.js"),"utf8");
 
   assert(app.includes("function alignModalCloseButton()"));
+  assert(app.includes('modal.style.setProperty("--modal-close-top","14px")'),"Mobil live X scroll geometry yerine sabit shell koordinatı kullanmalı");
   assert(app.includes("Array.from(modalBody.children||[])"));
   assert(app.includes('modalBody.querySelector?.(".live-match-head h2")'));
   assert(!app.includes('const heading=modalBody.querySelector?.("h2")'));
@@ -1883,30 +1884,6 @@ test("Online Klasik mod tüm 4/5/6 uzunluklarında 5/6/7 tahmin kuralına sahip"
   assert(migration.includes("attempt_limit in (5,6,7,8)"));
   assert(migration.includes("attempt_limit=word_length+1"));
   assert(migration.includes("attempts:=clean_length+1"));
-});
-
-test("Mobil online oyun X düğmesi oyun scroll alanından fiziksel olarak ayrıdır",()=>{
-  const app=fs.readFileSync(path.join(ROOT,"src/js/app.js"),"utf8");
-  const css=fs.readFileSync(path.join(ROOT,"src/css/mobile-fixes.css"),"utf8");
-  const index=fs.readFileSync(path.join(ROOT,"index.html"),"utf8");
-
-  assert(index.includes('id="liveModalClose"'));
-  assert(index.includes('aria-label="Online oyunu kapat"'));
-  assert(app.includes('const liveClose=$("#liveModalClose")'));
-  assert(app.includes('regularClose.hidden=true'));
-  assert(app.includes('liveClose.hidden=false'));
-  assert(app.includes('const isActualOnlineGame=Boolean($("#liveMatchRoot"))'));
-  assert(app.includes('const liveModalCloseButton=$("#liveModalClose")'));
-  assert(css.includes('body>.live-modal-close-fixed'));
-  assert(/<\/section>\s*<\/div>\s*(?:<!--[\s\S]*?-->\s*)?<button[^>]+id="liveModalClose"/.test(index));
-  assert(!css.includes('.modal-backdrop>.live-modal-close-fixed'));
-  assert(css.includes('position:fixed!important'));
-  assert(css.includes('.live-match-modal.live-close-pinned>.modal-close{display:none!important}'));
-  assert(!app.includes('--live-close-fixed-top'));
-  assert(!app.includes('--live-close-fixed-left'));
-  const pinBlock=app.slice(app.indexOf('function pinLiveModalCloseButton(){'),app.indexOf('function alignModalCloseButton(){'));
-  assert(!pinBlock.includes('getBoundingClientRect'));
-  assert(!pinBlock.includes('visualViewport'));
 });
 
 test("Dokümantasyon tek README dosyasında tutuluyor",()=>{

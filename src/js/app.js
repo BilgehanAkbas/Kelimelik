@@ -2304,52 +2304,6 @@ function restoreGame(){
 let modalCloseAction=null;
 let modalReturnFocus=null;
 
-function clearLiveModalClosePin(){
-  const modal=modalBody?.parentNode;
-  const regularClose=$("#modalClose");
-  const liveClose=$("#liveModalClose");
-
-  modal?.classList.remove("live-close-pinned");
-  regularClose?.removeAttribute("hidden");
-  document.documentElement.classList.remove("mobile-live-game-open");
-  document.body?.classList.remove("mobile-live-game-open");
-
-  if(liveClose){
-    liveClose.hidden=true;
-    liveClose.classList.remove("show");
-  }
-}
-
-function pinLiveModalCloseButton(){
-  const modal=modalBody?.parentNode;
-  const regularClose=$("#modalClose");
-  const liveClose=$("#liveModalClose");
-  if(!modal || !regularClose || !liveClose)return false;
-
-  /*
-   * Telefonlardaki gerçek online/bot maçında X artık backdrop/modal ağacının
-   * DIŞINDADIR. Konumu oyun/modal kaydırmasına göre hesaplanmaz;
-   * CSS position:fixed ile doğrudan tarayıcı görünüm alanına bağlanır.
-   */
-  const isActualOnlineGame=Boolean($("#liveMatchRoot"));
-  const shouldPin=window.innerWidth<=760 &&
-    modal.classList.contains("live-match-modal") &&
-    isActualOnlineGame;
-
-  if(!shouldPin){
-    clearLiveModalClosePin();
-    return false;
-  }
-
-  regularClose.hidden=true;
-  liveClose.hidden=false;
-  liveClose.classList.add("show");
-  modal.classList.add("live-close-pinned");
-  document.documentElement.classList.add("mobile-live-game-open");
-  document.body?.classList.add("mobile-live-game-open");
-  return true;
-}
-
 function alignModalCloseButton(){
   const modal=modalBody?.parentNode;
   const close=$("#modalClose");
@@ -2359,16 +2313,21 @@ function alignModalCloseButton(){
   else if(modal.style)delete modal.style["--modal-close-top"];
 
   /*
-   * Mobil online/bot penceresinde X, kaydırılan içerikten tamamen bağımsızdır.
-   * Modalın viewport üzerindeki sağ-üst köşesine sabitlenir; DOM güncellemeleri
-   * veya içerik scroll'u X koordinatını değiştiremez.
+   * Mobil online/bot maçında içerik sürekli yeniden render olur ve #modalBody
+   * kendi içinde kayar. Başlığın getBoundingClientRect() değerini burada
+   * kullanırsak MutationObserver her renderda X'i scroll konumuna göre yeniden
+   * taşır. Bu nedenle live modal X'i sabit bir modal-shell koordinatında kalır.
    */
-  if(pinLiveModalCloseButton())return;
+  const isMobileLiveModal=window.innerWidth<=760 &&
+    modal.classList.contains("live-match-modal") &&
+    Boolean($("#liveMatchRoot"));
 
-  /*
-   * Standart modallarda yalnız gerçek modal başlığını referans al. Sonuç kartı,
-   * hızlı eşleşme kartı vb. içerideki h2'ler X'i aşağı sürüklememeli.
-   */
+  if(isMobileLiveModal){
+    modal.style.setProperty("--modal-close-top","14px");
+    return;
+  }
+
+  /* Normal modallar (Yeni Oyun, Profil, Ayarlar vb.) eski başlık hizasını korur. */
   const directHeading=Array.from(modalBody.children||[])
     .find(node=>String(node?.tagName||"").toUpperCase()==="H2") || null;
   const liveHeading=modalBody.querySelector?.(".live-match-head h2") || null;
@@ -2402,12 +2361,7 @@ function showModal(html,{closeAction=null,bodyClass=""}={}){
   modalBackdrop.hidden=false;
   requestAnimationFrame(()=>{
     alignModalCloseButton();
-    const liveClose=$("#liveModalClose");
-    if(liveClose && !liveClose.hidden){
-      liveClose.focus();
-    }else{
-      $("#modalClose")?.focus();
-    }
+    $("#modalClose")?.focus();
   });
 }
 
@@ -2416,7 +2370,6 @@ function closeModal(){
   modalBackdrop.hidden=true;
   modalBody.className="";
   modalBody.closest?.(".modal")?.classList.remove("live-match-modal");
-  clearLiveModalClosePin();
 
   const target=modalReturnFocus;
   modalReturnFocus=null;
@@ -5391,14 +5344,6 @@ window.addEventListener("resize",updateResponsiveBoardSize);
 const modalCloseButton=$("#modalClose");
 if(modalCloseButton){
   modalCloseButton.onclick=e=>{
-    e?.preventDefault?.();
-    e?.stopPropagation?.();
-    closeOrBackModal();
-  };
-}
-const liveModalCloseButton=$("#liveModalClose");
-if(liveModalCloseButton){
-  liveModalCloseButton.onclick=e=>{
     e?.preventDefault?.();
     e?.stopPropagation?.();
     closeOrBackModal();
