@@ -1897,9 +1897,16 @@ test("Mobil online oyun X düğmesi oyun scroll alanından fiziksel olarak ayrı
   assert(app.includes('liveClose.hidden=false'));
   assert(app.includes('const isActualOnlineGame=Boolean($("#liveMatchRoot"))'));
   assert(app.includes('const liveModalCloseButton=$("#liveModalClose")'));
-  assert(css.includes('.modal-backdrop>.live-modal-close-fixed'));
+  assert(css.includes('body>.live-modal-close-fixed'));
+  assert(/<\/section>\s*<\/div>\s*(?:<!--[\s\S]*?-->\s*)?<button[^>]+id="liveModalClose"/.test(index));
+  assert(!css.includes('.modal-backdrop>.live-modal-close-fixed'));
   assert(css.includes('position:fixed!important'));
   assert(css.includes('.live-match-modal.live-close-pinned>.modal-close{display:none!important}'));
+  assert(!app.includes('--live-close-fixed-top'));
+  assert(!app.includes('--live-close-fixed-left'));
+  const pinBlock=app.slice(app.indexOf('function pinLiveModalCloseButton(){'),app.indexOf('function alignModalCloseButton(){'));
+  assert(!pinBlock.includes('getBoundingClientRect'));
+  assert(!pinBlock.includes('visualViewport'));
 });
 
 test("Dokümantasyon tek README dosyasında tutuluyor",()=>{

@@ -2311,11 +2311,12 @@ function clearLiveModalClosePin(){
 
   modal?.classList.remove("live-close-pinned");
   regularClose?.removeAttribute("hidden");
+  document.documentElement.classList.remove("mobile-live-game-open");
+  document.body?.classList.remove("mobile-live-game-open");
+
   if(liveClose){
     liveClose.hidden=true;
     liveClose.classList.remove("show");
-    liveClose.style.removeProperty("--live-close-fixed-top");
-    liveClose.style.removeProperty("--live-close-fixed-left");
   }
 }
 
@@ -2326,9 +2327,9 @@ function pinLiveModalCloseButton(){
   if(!modal || !regularClose || !liveClose)return false;
 
   /*
-   * Mobil online/bot oyununda kapatma düğmesi artık modalın çocuğu değildir.
-   * #liveModalClose doğrudan backdrop altında durur; bu yüzden oyun içeriği,
-   * modalBody scroll'u veya tahta boyu düğmeyi beraberinde hareket ettiremez.
+   * Telefonlardaki gerçek online/bot maçında X artık backdrop/modal ağacının
+   * DIŞINDADIR. Konumu oyun/modal kaydırmasına göre hesaplanmaz;
+   * CSS position:fixed ile doğrudan tarayıcı görünüm alanına bağlanır.
    */
   const isActualOnlineGame=Boolean($("#liveMatchRoot"));
   const shouldPin=window.innerWidth<=760 &&
@@ -2340,32 +2341,12 @@ function pinLiveModalCloseButton(){
     return false;
   }
 
-  const modalRect=modal.getBoundingClientRect?.();
-  if(!modalRect)return false;
-
-  const visual=window.visualViewport;
-  const viewportLeft=Number(visual?.offsetLeft)||0;
-  const viewportTop=Number(visual?.offsetTop)||0;
-  const viewportWidth=Number(visual?.width)||window.innerWidth||document.documentElement.clientWidth;
-  const closeSize=44;
-  const edge=10;
-
-  const top=Math.max(viewportTop+edge,Math.round(modalRect.top+12));
-  const modalRight=Math.min(viewportLeft+viewportWidth,Number(modalRect.right)||viewportLeft+viewportWidth);
-  const left=Math.max(
-    viewportLeft+edge,
-    Math.min(
-      viewportLeft+viewportWidth-closeSize-edge,
-      Math.round(modalRight-closeSize-12)
-    )
-  );
-
   regularClose.hidden=true;
-  liveClose.style.setProperty("--live-close-fixed-top",`${top}px`);
-  liveClose.style.setProperty("--live-close-fixed-left",`${left}px`);
   liveClose.hidden=false;
   liveClose.classList.add("show");
   modal.classList.add("live-close-pinned");
+  document.documentElement.classList.add("mobile-live-game-open");
+  document.body?.classList.add("mobile-live-game-open");
   return true;
 }
 

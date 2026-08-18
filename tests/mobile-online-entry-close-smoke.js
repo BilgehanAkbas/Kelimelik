@@ -12,12 +12,21 @@ assert(!mobile.includes("alignModalCloseButton=function"));
 
 assert(app.includes("function pinLiveModalCloseButton"));
 assert(app.includes('modal.classList.add("live-close-pinned")'));
-assert(app.includes('window.visualViewport.addEventListener("scroll",syncLiveCloseToViewport)'));
 const mobileCss=fs.readFileSync(path.join(ROOT,"src/css/mobile-fixes.css"),"utf8");
-assert(mobileCss.includes('.live-match-modal.live-close-pinned .modal-close'));
+assert(mobileCss.includes('.live-match-modal.live-close-pinned>.modal-close'));
 assert(mobileCss.includes('overflow:hidden!important;'),"Mobil live modal dış scroll kilidi eksik");
 assert(mobileCss.includes('flex-direction:column!important;'),"Mobil live modal flex sabitleme eksik");
 assert(mobileCss.includes('position:fixed!important'));
+const index=fs.readFileSync(path.join(ROOT,"index.html"),"utf8");
+assert(
+  /<\/section>\s*<\/div>\s*(?:<!--[\s\S]*?-->\s*)?<button[^>]+id="liveModalClose"/.test(index),
+  "Mobil online X modalBackdrop kapanışından sonra body seviyesinde olmalı"
+);
+assert(mobileCss.includes('body>.live-modal-close-fixed'),"X body seviyesine sabitlenmemiş");
+assert(!mobileCss.includes('.modal-backdrop>.live-modal-close-fixed'),"Eski backdrop selectorü kalmış");
+assert(mobileCss.includes('z-index:2147483647!important'),"X viewport üst katmanı eksik");
+assert(!app.includes('--live-close-fixed-top'),"X hâlâ modal koordinatına bağlı");
+assert(!app.includes('--live-close-fixed-left'),"X hâlâ modal koordinatına bağlı");
 
 // Pre-game online headers must not show the fake 00:00 timer.
 const botCountdown=app.slice(app.indexOf('function renderBotMatchNormal'),app.indexOf('function renderLiveMatch'));
