@@ -27,12 +27,14 @@ button,a{-webkit-tap-highlight-color:transparent}
 /* Home */
 .home-screen{
   min-height:100vh;min-height:100dvh;display:grid;place-items:center;
+  position:relative;isolation:isolate;overflow:hidden;
   padding-top:max(24px,env(safe-area-inset-top));
   padding-right:max(24px,env(safe-area-inset-right));
   padding-bottom:max(24px,env(safe-area-inset-bottom));
   padding-left:max(24px,env(safe-area-inset-left));
-  background:radial-gradient(circle at 50% 15%,rgba(255,255,255,.035),transparent 34%),var(--bg)
+  background:var(--bg)
 }
+.home-screen > .home-card{position:relative;z-index:2}
 .home-card{
   width:min(520px,100%);padding:28px;border:1px solid #343436;border-radius:16px;
   background:#1b1b1d;box-shadow:0 22px 70px rgba(0,0,0,.35)
@@ -859,16 +861,6 @@ button,a{touch-action:manipulation}
 
 
 /* RC16 — daha canlı ana sayfa */
-.home-screen{
-  position:relative;
-  isolation:isolate;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 50% 14%,rgba(89,173,85,.075),transparent 30%),
-    radial-gradient(circle at 82% 78%,rgba(205,182,90,.045),transparent 26%),
-    var(--bg)
-}
-.home-screen > .home-card{position:relative;z-index:2}
 .home-ambient{
   position:absolute;
   inset:0;
@@ -1071,11 +1063,6 @@ button,a{touch-action:manipulation}
 /* RC18 — ana sayfa: sakin, modern puzzle reveal */
 .home-glow,.home-ghost{display:none!important}
 
-.home-screen{
-  background:
-    radial-gradient(circle at 50% 18%,rgba(255,255,255,.028),transparent 32%),
-    var(--bg)
-}
 .home-grid-light{
   position:absolute;
   inset:-15%;
@@ -1295,16 +1282,6 @@ button,a{touch-action:manipulation}
 /* RC21 — uploaded landing redesign animation integrated directly */
 
 /* Ambient: faint matrix-style falling Turkish glyph columns */
-.home-screen{
-  position:relative;
-  isolation:isolate;
-  overflow:hidden;
-  background:var(--bg)
-}
-.home-screen > .home-card{
-  position:relative;
-  z-index:2
-}
 .home-ambient.matrix-ambient{
   position:absolute;
   inset:0;

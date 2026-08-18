@@ -402,20 +402,36 @@ test("PWA manifest release alanları ve ikonlar geçerli",()=>{
   }
 });
 
-test("Service Worker yeni cache adına sahip ve eski cacheleri siliyor",()=>{
+test("Service Worker sabit runtime cache kullanıyor ve eski cacheleri siliyor",()=>{
   const sw=fs.readFileSync(path.join(ROOT,"sw.js"),"utf8");
   assert(sw.includes('const CACHE_PREFIX="kelimelik-"'));
-  assert(/const CACHE="kelimelik-[^"]+"/.test(sw));
+  assert(sw.includes('const CACHE="kelimelik-runtime"'));
   assert(sw.includes("key.startsWith(CACHE_PREFIX) && key!==CACHE"));
   assert(sw.includes("self.skipWaiting()"));
   assert(sw.includes("self.clients.claim()"));
 });
 
-test("Service Worker online-config için network-first davranış kullanıyor",()=>{
+test("Service Worker uygulama kodu için deploy-safe network-first davranış kullanıyor",()=>{
+  const sw=fs.readFileSync(path.join(ROOT,"sw.js"),"utf8");
+  assert(sw.includes("const NETWORK_FIRST_PATHS=new Set(["));
+  for(const asset of [
+    './src/css/style.css',
+    './src/css/mobile-fixes.css',
+    './src/js/app.js',
+    './src/js/ui-patches.js',
+    './src/js/mobile-fixes.js',
+    './src/js/game-core.js',
+    './src/js/word-pools.js',
+    './src/js/online.js'
+  ]) assert(sw.includes(`"${asset}"`),`network-first asset eksik: ${asset}`);
+  assert(sw.includes('fetchAndCache(event.request,{cacheMode:"no-cache"})'));
+});
+
+test("Service Worker online-config için no-store network-first davranış kullanıyor",()=>{
   const sw=fs.readFileSync(path.join(ROOT,"sw.js"),"utf8");
   assert(sw.includes('const ONLINE_CONFIG_PATH=new URL("./src/js/online-config.js",self.location.href).pathname;'));
   assert(sw.includes("if(url.pathname===ONLINE_CONFIG_PATH)"));
-  assert(sw.includes(".catch(()=>cache.match(event.request,{ignoreSearch:true}))"));
+  assert(sw.includes('fetchAndCache(event.request,{cacheMode:"no-store"})'));
 });
 
 
@@ -1360,10 +1376,24 @@ test("Mobil ana sayfa demo satırında gizli divider sütunu kalmadı",()=>{
   assert(!css.includes("repeat(5,min(10.3vw,45px))\\n      8px"));
 });
 
-test("Service Worker asset eşleşmesini yalnızca aktif Kelimelik cache'inde yapıyor",()=>{
+test("Service Worker offline fallback'ı yalnızca aktif Kelimelik runtime cache'inde tutuyor",()=>{
   const sw=fs.readFileSync(path.join(ROOT,"sw.js"),"utf8");
-  assert(sw.includes("caches.open(CACHE).then(cache=>"));
-  assert(sw.includes('cache.match(event.request,{ignoreSearch:true})'));
+  assert(sw.includes("const cache=await caches.open(CACHE)"));
+  assert(sw.includes("cache.match("));
+  assert(sw.includes("fallbackKey || request"));
+});
+
+test("Landing CSS tek aktif ana home-screen bloğuna konsolide edildi",()=>{
+  const css=fs.readFileSync(path.join(ROOT,"src/css/style.css"),"utf8");
+  assert(css.includes("position:relative;isolation:isolate;overflow:hidden;"));
+  assert(css.includes("background:var(--bg)"));
+  assert.strictEqual((css.match(/\.home-screen > \.home-card/g)||[]).length,1);
+  for(const obsolete of [
+    "circle at 50% 15%",
+    "circle at 50% 14%",
+    "circle at 82% 78%",
+    "circle at 50% 18%"
+  ]) assert(!css.includes(obsolete),`eski home-screen background kaldı: ${obsolete}`);
 });
 
 

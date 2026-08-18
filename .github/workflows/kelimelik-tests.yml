@@ -130,5 +130,8 @@ jobs:
       - name: Room copy and bot candidate reasoning smoke test
         run: node tests/room-copy-bot-reasoning-smoke.js
 
+      - name: Bot deadlock and live A3 smoke test
+        run: node tests/bot-deadlock-live-a3-smoke.js
+
       - name: Final cleanup smoke test
         run: node tests/final-cleanup-smoke.js

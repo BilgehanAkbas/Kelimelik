@@ -208,6 +208,15 @@
     top:var(--modal-close-top,14px)!important;
     right:12px!important
   }
+  /* Mobil online/bot X: scroll edilen #modalBody'den tamamen bağımsız. */
+  .live-match-modal.live-close-pinned .modal-close{
+    position:fixed!important;
+    top:var(--live-close-fixed-top)!important;
+    left:var(--live-close-fixed-left)!important;
+    right:auto!important;
+    z-index:1002!important;
+    transform:none!important
+  }
   .live-match-head,.bot-normal-head{
     min-height:44px!important;
     padding:0 58px 0 0!important;

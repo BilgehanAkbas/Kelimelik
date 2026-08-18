@@ -2304,6 +2304,45 @@ function restoreGame(){
 let modalCloseAction=null;
 let modalReturnFocus=null;
 
+function clearLiveModalClosePin(){
+  const modal=modalBody?.parentNode;
+  if(!modal)return;
+  modal.classList.remove("live-close-pinned");
+  modal.style.removeProperty?.("--live-close-fixed-top");
+  modal.style.removeProperty?.("--live-close-fixed-left");
+}
+
+function pinLiveModalCloseButton(){
+  const modal=modalBody?.parentNode;
+  const close=$("#modalClose");
+  if(!modal || !close)return false;
+
+  const shouldPin=window.innerWidth<=760 && modal.classList.contains("live-match-modal");
+  if(!shouldPin){
+    clearLiveModalClosePin();
+    return false;
+  }
+
+  const modalRect=modal.getBoundingClientRect?.();
+  const closeRect=close.getBoundingClientRect?.();
+  if(!modalRect)return false;
+
+  const closeSize=Math.max(44,Number(closeRect?.width)||44);
+  const viewportWidth=window.visualViewport?.width || window.innerWidth || document.documentElement.clientWidth;
+  const viewportTop=window.visualViewport?.offsetTop || 0;
+  const safeTop=viewportTop+8;
+  const top=Math.max(safeTop,Math.round(modalRect.top+12));
+  const left=Math.min(
+    viewportWidth-closeSize-8,
+    Math.max(8,Math.round(modalRect.right-closeSize-12))
+  );
+
+  modal.style.setProperty("--live-close-fixed-top",`${top}px`);
+  modal.style.setProperty("--live-close-fixed-left",`${left}px`);
+  modal.classList.add("live-close-pinned");
+  return true;
+}
+
 function alignModalCloseButton(){
   const modal=modalBody?.parentNode;
   const close=$("#modalClose");
@@ -2313,9 +2352,15 @@ function alignModalCloseButton(){
   else if(modal.style)delete modal.style["--modal-close-top"];
 
   /*
-   * Yalnız gerçek modal başlığını referans al. Sonuç kartı, hızlı eşleşme
-   * kartı vb. içerideki h2'ler X'i aşağı sürüklememeli. Canlı maçta ise
-   * başlık, live-match-head içinde bulunduğundan onu özel olarak kullanıyoruz.
+   * Mobil online/bot penceresinde X, kaydırılan içerikten tamamen bağımsızdır.
+   * Modalın viewport üzerindeki sağ-üst köşesine sabitlenir; DOM güncellemeleri
+   * veya içerik scroll'u X koordinatını değiştiremez.
+   */
+  if(pinLiveModalCloseButton())return;
+
+  /*
+   * Standart modallarda yalnız gerçek modal başlığını referans al. Sonuç kartı,
+   * hızlı eşleşme kartı vb. içerideki h2'ler X'i aşağı sürüklememeli.
    */
   const directHeading=Array.from(modalBody.children||[])
     .find(node=>String(node?.tagName||"").toUpperCase()==="H2") || null;
@@ -2359,6 +2404,7 @@ function closeModal(){
   modalBackdrop.hidden=true;
   modalBody.className="";
   modalBody.closest?.(".modal")?.classList.remove("live-match-modal");
+  clearLiveModalClosePin();
 
   const target=modalReturnFocus;
   modalReturnFocus=null;
@@ -2386,6 +2432,13 @@ if(typeof MutationObserver!=="undefined"){
 window.addEventListener("resize",()=>{
   if(!modalBackdrop.hidden)requestAnimationFrame(alignModalCloseButton);
 });
+if(window.visualViewport){
+  const syncLiveCloseToViewport=()=>{
+    if(!modalBackdrop.hidden)requestAnimationFrame(alignModalCloseButton);
+  };
+  window.visualViewport.addEventListener("resize",syncLiveCloseToViewport);
+  window.visualViewport.addEventListener("scroll",syncLiveCloseToViewport);
+}
 
 function flashMessage(msg){
   showModal(`<h2>Kelimelik</h2><p id="flashMessageText"></p>`);

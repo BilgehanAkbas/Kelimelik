@@ -32,5 +32,7 @@ assert(js.includes("Modal X hizalaması app.js içinde tek kaynaktan yönetilir"
 assert(!js.includes("alignModalCloseButton=function"),"Mobil katman X hizalama fonksiyonunu tekrar override etmemeli");
 assert(app.includes("Array.from(modalBody.children||[])"),"X yalnız gerçek modal başlığını aramalı");
 assert(app.includes('modalBody.querySelector?.(".live-match-head h2")'),"Canlı maç üst başlığı ayrıca desteklenmeli");
+assert(app.includes('function pinLiveModalCloseButton'),"Mobil online X viewport'a sabitlenmeli");
+assert(css.includes('.live-match-modal.live-close-pinned .modal-close'),"Mobil online X fixed kuralı eksik");
 assert(app.includes("((headingHeight-closeHeight)/2)"),"Başlık merkezi doğru hesaplanmalı");
 console.log("✓ Mobile mode/time sizing, fixed online close, favorite and self-board ordering smoke test");
