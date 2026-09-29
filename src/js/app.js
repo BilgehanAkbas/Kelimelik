@@ -2330,8 +2330,11 @@ function alignModalCloseButton(){
   /* Normal modallar (Yeni Oyun, Profil, Ayarlar vb.) eski başlık hizasını korur. */
   const directHeading=Array.from(modalBody.children||[])
     .find(node=>String(node?.tagName||"").toUpperCase()==="H2") || null;
+  // Nasıl oynanır? başlığı .howto kapsayıcısının içinde olduğu için
+  // normal modal hizalamasında onu da doğrudan referans al.
+  const howToHeading=modalBody.querySelector?.(".howto > h2") || null;
   const liveHeading=modalBody.querySelector?.(".live-match-head h2") || null;
-  const heading=directHeading || liveHeading;
+  const heading=directHeading || howToHeading || liveHeading;
   if(!heading)return;
 
   const modalRect=modal.getBoundingClientRect?.();
