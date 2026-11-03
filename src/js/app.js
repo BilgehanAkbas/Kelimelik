@@ -200,20 +200,6 @@ async function hydrateTdkWordPools(){
     console.warn("TDK kelime listesi doğrudan alınamadı:",error);
   }
 
-  try{
-    const raw=await fetchTextWithTimeout(
-      "https://raw.githubusercontent.com/ncarkaci/TDKDictionaryCrawler/master/TDK_S%C3%B6zl%C3%BCk_Kelime_Listesi.txt",
-      6500
-    );
-    const pools=splitTdkWords(raw.split(/\r?\n/));
-    if(applyCanonicalTdkPools(pools)){
-      saveCachedTdkPools(pools);
-      return true;
-    }
-  }catch(error){
-    console.warn("TDK yedek kelime listesi alınamadı:",error);
-  }
-
   // Çevrimdışı açılışta oyun yine çalışsın; yeni oyun sürümü yerel A2 havuzunun
   // mevcut tahmin sözlüğüyle kesişiminden üretilir.
   applyCanonicalTdkPools(WORD_POOLS);

@@ -42,7 +42,7 @@
       lower.includes("network request failed") ||
       lower.includes("load failed")
     ){
-      return "Online servise ulaşılamadı. İnternet bağlantını kontrol edip tekrar dene.";
+      return "Online servise ulaşılamadı. Bağlantını kontrol edip biraz sonra tekrar dene.";
     }
 
     if(
@@ -65,7 +65,7 @@
     const readablePrefixes=[
       "Önce ","Geçersiz ","Oda ","Rakip ","Maç ","Tahmin ","Gizli ",
       "Bu ","Özel ","Kelimelik ","Klasik ","Çevrimiçi ","Online servis ",
-      "Kelime havuzunda yok", "Tahmin hakkın kalmadı", "Çok hızlı tepki ", "Rövanş "
+      "Kelime havuzunda yok", "Tahmin hakkın kalmadı", "Çok hızlı tepki ", "Çok fazla ", "Rövanş "
     ];
     const readable=message || raw;
     if(readable.length<=180 && readablePrefixes.some(prefix=>readable.startsWith(prefix))){
@@ -155,6 +155,7 @@
       script.src=String(CONFIG.sdkUrl||"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3");
       script.async=true;
       script.crossOrigin="anonymous";
+      if(CONFIG.sdkIntegrity)script.integrity=String(CONFIG.sdkIntegrity);
       const fail=message=>{
         sdkPromise=null;
         try{script.remove?.();}catch(e){}
@@ -178,7 +179,8 @@
       auth:{
         persistSession:true,
         autoRefreshToken:true,
-        detectSessionInUrl:true
+        /* Yalnız anonim oturum var: URL'deki token ile başka bir oturuma geçilmesin. */
+        detectSessionInUrl:false
       }
     });
     return client;

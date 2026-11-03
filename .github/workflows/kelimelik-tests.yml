@@ -30,6 +30,7 @@ jobs:
           node --check src/js/online.js
           node --check src/js/ui-patches.js
           node --check src/js/mobile-fixes.js
+          node --check api/keepalive.js
 
       - name: Kelimelik core tests
         run: node tests/run-tests.js
@@ -135,3 +136,12 @@ jobs:
 
       - name: Final cleanup smoke test
         run: node tests/final-cleanup-smoke.js
+
+      - name: Bot no-repeat smoke test
+        run: node tests/bot-no-repeat-smoke.js
+
+      - name: Mobile live close stability smoke test
+        run: node tests/mobile-live-close-stability-smoke.js
+
+      - name: Production hardening smoke test
+        run: node tests/production-hardening-smoke.js

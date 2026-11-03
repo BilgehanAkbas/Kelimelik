@@ -59,6 +59,7 @@ Online özellikler için:
 2. `supabase/migrations/` içindeki migration'lar sırasıyla uygulanır.
 3. `src/js/online-config.js` içine yalnız Supabase Project URL ve publishable/anon key yazılır.
 4. `service_role` veya başka gizli sunucu anahtarları frontend'e eklenmez.
+5. Ücretsiz plandaki proje 7 gün etkinlik görmezse duraklatılır. Bunu önlemek için `api/keepalive.js` Vercel Cron ile günde bir kez çalışır. Supabase proje adresi değişirse `online-config.js`, `api/keepalive.js`, `vercel.json` ve `index.html` birlikte güncellenir.
 
 ### Test
 

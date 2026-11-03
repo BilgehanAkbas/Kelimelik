@@ -578,7 +578,7 @@ test("TDK kanonik tahmin havuzu açılışta yükleniyor",()=>{
   const app=fs.readFileSync(path.join(ROOT,"src/js/app.js"),"utf8");
   assert(app.includes('const CURRENT_ANSWER_VERSION="A3"'));
   assert(app.includes('https://sozluk.gov.tr/autocomplete.json'));
-  assert(app.includes('TDK_S%C3%B6zl%C3%BCk_Kelime_Listesi.txt'));
+  assert(!app.includes('raw.githubusercontent.com'));
   assert(app.includes('hydrateTdkWordPools().then('));
 });
 
@@ -586,7 +586,7 @@ test("TDK anlam endpointi ve uygulama içi anlam ekranı mevcut",()=>{
   const html=fs.readFileSync(path.join(ROOT,"index.html"),"utf8");
   const app=fs.readFileSync(path.join(ROOT,"src/js/app.js"),"utf8");
 
-  assert(html.includes("connect-src 'self' https://sozluk.gov.tr https://*.supabase.co wss://*.supabase.co;"));
+  assert(html.includes("connect-src 'self' https://sozluk.gov.tr https://ggezbkgqgzghygltqqsb.supabase.co wss://ggezbkgqgzghygltqqsb.supabase.co;"));
   assert(app.includes('const TDK_API_BASE="https://sozluk.gov.tr/gts?ara="'));
   assert(app.includes("async function fetchTdkMeaning(word)"));
   assert(app.includes("async function showWordMeaning(word,"));
