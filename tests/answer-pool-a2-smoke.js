@@ -42,7 +42,7 @@ assert.strictEqual(daily[0].version,"D1");
 assert.strictEqual(daily[0].start,"2026-08-14");
 
 const app=fs.readFileSync(path.join(ROOT,"src/js/app.js"),"utf8");
-assert(app.includes('const CURRENT_ANSWER_VERSION="A3"'));
+assert(app.includes('const CURRENT_ANSWER_VERSION="A4"'));
 assert(app.includes('const RECENT_ANSWERS_KEY="kelimelik-recent-answers-v1"'));
 assert(app.includes("const RECENT_ANSWER_WINDOW=24"));
 assert(app.includes("function chooseFreshRandomSecret"));

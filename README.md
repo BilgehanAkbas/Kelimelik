@@ -23,7 +23,7 @@
 
 ### Kelime Havuzu
 
-Oyun 4, 5 ve 6 harfli Türkçe tahmin ve cevap havuzları kullanır. Aktif online cevap havuzu A3 sürümüdür ve TDK tabanlı kanonik kelime listesiyle uyumludur. Cevap kelimeleri tahmin havuzunun içinde bulunur; uzunluk ve Türkçe karakter kuralları veritabanı tarafında da doğrulanır.
+Oyun 4, 5 ve 6 harfli Türkçe tahmin ve cevap havuzları kullanır. Tahmin havuzu TDK'nın resmi madde listesine dayanır. Yeni oyunların cevap listesi A4 sürümüdür; online tarafta aynı kelimeler veritabanındaki `A3` etiketli satırlarda tutulur. Eski oyun kodları bozulmasın diye A1, A2, A3 ve günlük seri dondurulmuştur. Cevap kelimeleri tahmin havuzunun içinde bulunur; uzunluk ve Türkçe karakter kuralları veritabanı tarafında da doğrulanır.
 
 ## Kod Bütünlüğü
 

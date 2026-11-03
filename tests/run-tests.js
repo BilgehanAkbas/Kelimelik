@@ -44,10 +44,10 @@ test("4/5/6 tahmin havuzları yapısal olarak geçerli",()=>{
 
 
 test("v1.2.14 geniş tahmin havuzu ve özel isim takviyesi doğru",()=>{
-  assert.strictEqual(WORDS["4"].length,2215);
-  assert.strictEqual(WORDS["5"].length,5851);
-  assert.strictEqual(WORDS["6"].length,6288);
-  assert.strictEqual(WORDS["4"].length+WORDS["5"].length+WORDS["6"].length,14354);
+  assert.strictEqual(WORDS["4"].length,2214);
+  assert.strictEqual(WORDS["5"].length,5873);
+  assert.strictEqual(WORDS["6"].length,6411);
+  assert.strictEqual(WORDS["4"].length+WORDS["5"].length+WORDS["6"].length,14498);
 
   ["AKIŞ","ATIŞ","ANKA","BANA"].forEach(word=>assert(WORDS["4"].includes(word),word));
   ["ARICI","ARTIŞ","BAĞLI","BİLME"].forEach(word=>assert(WORDS["5"].includes(word),word));
@@ -574,12 +574,12 @@ test("Oyun kodu kullanıcı arayüzünden tamamen kaldırıldı",()=>{
   assert(!css.includes(".game-code-card"));
 });
 
-test("TDK kanonik tahmin havuzu açılışta yükleniyor",()=>{
+test("Kelime havuzu uygulamayla geliyor, açılışta ağdan çekilmiyor",()=>{
   const app=fs.readFileSync(path.join(ROOT,"src/js/app.js"),"utf8");
-  assert(app.includes('const CURRENT_ANSWER_VERSION="A3"'));
-  assert(app.includes('https://sozluk.gov.tr/autocomplete.json'));
+  assert(app.includes('const CURRENT_ANSWER_VERSION="A4"'));
+  assert(!app.includes('autocomplete.json'));
   assert(!app.includes('raw.githubusercontent.com'));
-  assert(app.includes('hydrateTdkWordPools().then('));
+  assert(!app.includes('hydrateTdkWordPools'));
 });
 
 test("TDK anlam endpointi ve uygulama içi anlam ekranı mevcut",()=>{

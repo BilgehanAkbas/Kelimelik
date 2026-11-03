@@ -7,7 +7,7 @@ const WORD_POOLS=window.KELIMELIK_WORD_POOLS || {};
 const ANSWER_POOL_VERSIONS=window.KELIMELIK_ANSWER_POOLS || {};
 const DAILY_SERIES=window.KELIMELIK_DAILY_SERIES || [];
 
-const CURRENT_ANSWER_VERSION="A3";
+const CURRENT_ANSWER_VERSION="A4";
 const RECENT_ANSWERS_KEY="kelimelik-recent-answers-v1";
 const RECENT_ANSWER_WINDOW=24;
 const DAILY_EPOCH="2026-08-14";
@@ -107,9 +107,6 @@ function pauseGameTimer(){
   updateGameModeStrip();
 }
 
-const TDK_WORD_CACHE_KEY="kelimelik-tdk-word-pool-v1";
-const TDK_WORD_CACHE_MAX_AGE=7*24*60*60*1000;
-
 function normalizeTdkGameWord(value){
   return String(value||"")
     .trim()
@@ -117,24 +114,6 @@ function normalizeTdkGameWord(value){
     .replace(/[îÎ]/g,"i")
     .replace(/[ûÛ]/g,"u")
     .toLocaleUpperCase("tr-TR");
-}
-
-function splitTdkWords(values){
-  const result={"4":[],"5":[],"6":[]};
-  const seen={"4":new Set(),"5":new Set(),"6":new Set()};
-
-  for(const value of values||[]){
-    const word=normalizeTdkGameWord(value);
-    const key=String(word.length);
-    if(!seen[key] || !/^[A-ZÇĞİÖŞÜ]+$/.test(word) || seen[key].has(word))continue;
-    seen[key].add(word);
-    result[key].push(word);
-  }
-
-  for(const key of ["4","5","6"]){
-    result[key].sort((a,b)=>a.localeCompare(b,"tr"));
-  }
-  return result;
 }
 
 function applyCanonicalTdkPools(pools){
@@ -154,56 +133,6 @@ function applyCanonicalTdkPools(pools){
     })
   );
   return true;
-}
-
-function loadCachedTdkPools(){
-  try{
-    const saved=JSON.parse(localStorage.getItem(TDK_WORD_CACHE_KEY)||"null");
-    if(!saved?.savedAt || Date.now()-Number(saved.savedAt)>TDK_WORD_CACHE_MAX_AGE)return null;
-    return saved.pools || null;
-  }catch(e){
-    return null;
-  }
-}
-
-function saveCachedTdkPools(pools){
-  try{
-    localStorage.setItem(TDK_WORD_CACHE_KEY,JSON.stringify({savedAt:Date.now(),pools}));
-  }catch(e){}
-}
-
-async function fetchTextWithTimeout(url,timeoutMs=6500){
-  const controller=typeof AbortController!=="undefined" ? new AbortController() : null;
-  const timer=controller ? setTimeout(()=>controller.abort(),timeoutMs) : null;
-  try{
-    const response=await fetch(url,{cache:"no-store",credentials:"omit",signal:controller?.signal});
-    if(!response.ok)throw new Error(`HTTP ${response.status}`);
-    return await response.text();
-  }finally{
-    if(timer)clearTimeout(timer);
-  }
-}
-
-async function hydrateTdkWordPools(){
-  const cached=loadCachedTdkPools();
-  if(cached && applyCanonicalTdkPools(cached))return true;
-
-  try{
-    const raw=await fetchTextWithTimeout("https://sozluk.gov.tr/autocomplete.json",5500);
-    const data=JSON.parse(raw);
-    const pools=splitTdkWords(Array.isArray(data)?data.map(item=>item?.madde):[]);
-    if(applyCanonicalTdkPools(pools)){
-      saveCachedTdkPools(pools);
-      return true;
-    }
-  }catch(error){
-    console.warn("TDK kelime listesi doğrudan alınamadı:",error);
-  }
-
-  // Çevrimdışı açılışta oyun yine çalışsın; yeni oyun sürümü yerel A2 havuzunun
-  // mevcut tahmin sözlüğüyle kesişiminden üretilir.
-  applyCanonicalTdkPools(WORD_POOLS);
-  return false;
 }
 
 function setWordLength(length,answerVersion=CURRENT_ANSWER_VERSION){
@@ -5615,8 +5544,7 @@ function stopHomeWordAnimation(){
 function bootstrapApp(){
   applySettings();
 
-  /* Arayüzü ağ isteğine bağlama. TDK havuzu arka planda yenilenirken
-     uygulama yerel doğrulanmış havuzla anında açılır. */
+  /* Kelime havuzu uygulamayla birlikte gelir, açılış ağ isteği beklemez. */
   applyCanonicalTdkPools(WORD_POOLS);
   setWordLength(5,CURRENT_ANSWER_VERSION);
   buildKeyboard();
@@ -5629,17 +5557,6 @@ function bootstrapApp(){
     showHome();
     startLiveRoomFromUrl();
   }
-
-  hydrateTdkWordPools().then(()=>{
-    try{
-      /* TDK listesi geldiyse aktif oyunun kelime doğrulamasını da
-         güncel havuza geçir; mevcut tahta/cevap durumu değişmez. */
-      setWordLength(COLS,gameAnswerVersion);
-      renderKeyboardUsage();
-    }catch(error){
-      console.warn("TDK havuzu uygulanamadı:",error);
-    }
-  }).catch(error=>console.warn("TDK havuzu yenilenemedi:",error));
 }
 
 try{

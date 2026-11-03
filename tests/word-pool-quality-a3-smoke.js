@@ -14,8 +14,8 @@ const app=fs.readFileSync(path.join(ROOT,"src/js/app.js"),"utf8");
 const sql=fs.readFileSync(path.join(ROOT,"supabase/migrations/20260817_022_word_pool_quality_a3.sql"),"utf8");
 const tdkSql=fs.readFileSync(path.join(ROOT,"supabase/migrations/20260817_023_tdk_canonical_word_pool_a3.sql"),"utf8");
 
-assert.deepStrictEqual([words["4"].length,words["5"].length,words["6"].length],[2215,5851,6288]);
-assert.strictEqual(words["4"].length+words["5"].length+words["6"].length,14354);
+assert.deepStrictEqual([words["4"].length,words["5"].length,words["6"].length],[2214,5873,6411]);
+assert.strictEqual(words["4"].length+words["5"].length+words["6"].length,14498);
 
 for(const word of ["BİLİ","BİŞİ"]){
   assert(words["4"].includes(word),`${word} TDK kanonik final guess pool'da olmalı`);
@@ -46,7 +46,7 @@ assert(tdkSql.includes("extensions.http_get("));
 assert(tdkSql.includes("delete from public.multiplayer_guess_words"));
 assert(tdkSql.includes("insert into public.multiplayer_guess_words"));
 
-assert(app.includes('const CURRENT_ANSWER_VERSION="A3"'));
+assert(app.includes('const CURRENT_ANSWER_VERSION="A4"'));
 assert(app.includes("const safeFallback=ANSWER_WORDS.filter"));
 assert(app.includes("const nonSecret=ANSWER_WORDS.filter"));
 assert(!app.includes("const safeFallback=WORDS.filter"));

@@ -145,3 +145,6 @@ jobs:
 
       - name: Production hardening smoke test
         run: node tests/production-hardening-smoke.js
+
+      - name: A4 word pool smoke test
+        run: node tests/word-pool-a4-smoke.js

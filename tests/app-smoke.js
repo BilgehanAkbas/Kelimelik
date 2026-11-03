@@ -281,7 +281,7 @@ function loadApp(storageInitial={}){
 const fresh=loadApp();
 
 assert.strictEqual(fresh.eval("COLS"),5);
-assert.strictEqual(fresh.eval("gameAnswerVersion"),"A3");
+assert.strictEqual(fresh.eval("gameAnswerVersion"),"A4");
 assert.strictEqual(fresh.document.querySelectorAll(".tile").length,40);
 assert.strictEqual(fresh.document.querySelectorAll(".counter").length,24);
 assert(fresh.eval("VALID_WORDS.has(secretWord)"));

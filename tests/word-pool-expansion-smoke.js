@@ -12,8 +12,8 @@ vm.runInContext(dataCode,context);
 const words=context.window.KELIMELIK_WORD_POOLS;
 const answers=context.window.KELIMELIK_ANSWER_POOLS;
 const daily=context.window.KELIMELIK_DAILY_SERIES;
-assert.deepStrictEqual([words["4"].length,words["5"].length,words["6"].length],[2215,5851,6288]);
-assert.strictEqual(words["4"].length+words["5"].length+words["6"].length,14354);
+assert.deepStrictEqual([words["4"].length,words["5"].length,words["6"].length],[2214,5873,6411]);
+assert.strictEqual(words["4"].length+words["5"].length+words["6"].length,14498);
 
 for(const word of ["AKIŞ","ATIŞ","ANKA","BANA","ARICI","ARTIŞ","BAĞLI","BİLME","AKILCI","AMAÇLI","ANILMA","ALANYA","EFES","AYLİN","ZEHRA","TRUVA","PRİENE","PATARA"]){
   assert(words[String([...word].length)].includes(word),`${word} geniş sözlükte yok`);
@@ -76,7 +76,7 @@ for(const word of ["BİNGO","BİYOM","FOTON","MARŞAL"]){
 
 const app=fs.readFileSync(path.join(ROOT,"src/js/app.js"),"utf8");
 assert(app.includes("CORE.possibleSecrets(ANSWER_WORDS,completed)"));
-assert(app.includes('const CURRENT_ANSWER_VERSION="A3"'));
+assert(app.includes('const CURRENT_ANSWER_VERSION="A4"'));
 assert(app.includes("const RECENT_ANSWER_WINDOW=24"));
 
 console.log("✓ geniş guess pool, frozen A1/D1, A2 cevap havuzu ve tekrar koruması");
